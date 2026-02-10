@@ -1,7 +1,7 @@
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { SquarePen, Trash2, Eye, SlidersHorizontal, UserPen } from "lucide-react";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import StatusTag from "./status-tag";
 import { Copy } from "lucide-react";
@@ -12,10 +12,11 @@ interface DataTableProps {
 	data: any[][];
 	searchInput: string;
 	doDelete: (id: string) => void;
-	viewLink: (id: string | number) => string;
+	viewLink?: (id: string | number) => string;
+	setViewModalId?: React.Dispatch<SetStateAction<string | number | null>>;
 }
 
-export function DataTable({ columns, data, searchInput, doDelete, viewLink }: DataTableProps) {
+export function DataTable({ columns, data, searchInput, doDelete, setViewModalId }: DataTableProps) {
 
 	const [filteredData, setFilteredData] = useState(data);
 	const [selectedData, setSelectedData] = useState<number[]>([]);
@@ -73,42 +74,44 @@ export function DataTable({ columns, data, searchInput, doDelete, viewLink }: Da
 										<Checkbox checked={selectedData.includes(row[0])} onCheckedChange={() => updatedSelectedData(row[0])} />
 									</div>
 								</td>
-								{row.map((item, idx2) => {
+								{row.map((item: string, idx2) => {
 
-									let renderItem = item;
+									let renderItem = <>{item}</>;
 
 									if (idx2 == 0) {
-										renderItem = (
+										renderItem = item.indexOf("-") >= 0 ?
 											<div className="flex items-center gap-2">
 												<span>{item.split("-")[0].concat("-").concat(item.split("-")[1]).concat("...")}</span>
 												<Copy size={13} />
 											</div>
-										);
+											:
+											<div className="flex items-center gap-2">
+												<span>{item}</span>
+												<Copy size={13} />
+											</div>
 									}
 									else if (columns[idx2] == "Status") {
 										renderItem = <StatusTag text={item} />;
 									}
 									else if (columns[idx2] == "Pickup Address" || columns[idx2] == "Dropoff Address") {
-										renderItem = item.split(",").at(-4);
+										renderItem = <>{item.split(",").at(-4)}</>;
 									}
 
 									return (
-										<td data-label={columns[idx2]} key={idx2} className="px-4 py-2 text-sm cursor-pointer"
-											onClick={() => router.visit(viewLink(row[0]))}>
-											
-												{renderItem}
-										
+										<td data-label={columns[idx2]} key={idx2} className="px-4 py-2 text-sm cursor-pointer">
+
+											{renderItem}
+
 										</td>
 									)
 
 								})}
 								<td data-label="Actions" className="px-4 text-sm">
 									<div className="flex items-center lg:justify-center space-x-1">
-										<Button variant="ghost" size="sm" className="text-xs">
-											<UserPen className="size-4" color="black" />
-										</Button>
-										<Button variant="ghost" size="icon" >
-											<SquarePen className="size-4 text-sky-500" />
+										<Button variant="ghost" size="sm" className="text-xs"
+											onClick={() => setViewModalId && setViewModalId(row[0])}
+										>
+											<Eye className="size-4" color="black" />
 										</Button>
 										<Button variant="ghost" size="icon" onClick={() => doDelete(row[0])}>
 											<Trash2 className="size-4 text-rose-500" />

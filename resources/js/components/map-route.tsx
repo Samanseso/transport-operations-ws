@@ -77,7 +77,6 @@ const MapRoute = ({ reservation, padding }: MapRouteProps) => {
 
     }
 
-
     return (
             
                 
@@ -100,8 +99,6 @@ const MapRoute = ({ reservation, padding }: MapRouteProps) => {
 
                     </MapContainer>
               
-            
-
 
     )
 }

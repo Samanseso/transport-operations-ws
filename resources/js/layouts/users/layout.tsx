@@ -9,14 +9,15 @@ import { type PropsWithChildren } from 'react';
 
 import { useNewReservation } from '@/components/context/new-reservation-context';
 import { step } from '@/routes/reservations';
+import { admin, customer, driver } from '@/routes/user';
 
-interface CreateReservationLayoutProps {
+interface UsersLayoutProps {
 
 }
 
 
 
-export default function CreateReservationLayout({ children }: PropsWithChildren<CreateReservationLayoutProps>) {
+export default function UsersLayout({ children }: PropsWithChildren<UsersLayoutProps>) {
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
@@ -25,33 +26,21 @@ export default function CreateReservationLayout({ children }: PropsWithChildren<
 
     const sidebarNavItems: NavItem[] = [
         {
-            title: 'Date & Vehicle',
-            href: step("1"),
+            title: 'Customers',
+            href: customer(),
             icon: Truck,
             roles: ["all"]
         },
         {
-            title: ' Pick-up',
-            href: step("2"),
+            title: 'Driver',
+            href: driver(),
             icon: MapPin,
             roles: ["all"]
         },
         {
-            title: 'Drop-off',
-            href: step("3"),
+            title: 'Admin',
+            href: admin(),
             icon: MapPinned,
-            roles: ["all"]
-        },
-        {
-            title: 'Details',
-            href: step("4"),
-            icon: ClipboardPen,
-            roles: ["all"]
-        },
-        {
-            title: 'Summary',
-            href: step("5"),
-            icon: NotepadText,
             roles: ["all"]
         },
     ];
@@ -59,20 +48,18 @@ export default function CreateReservationLayout({ children }: PropsWithChildren<
 
     return (
         <div className="px-4 py-6">
-            <Heading title="Create Reservation" description="Follow the steps to create a new reservation." />
-
-            <div className="flex flex-col lg:flex-row lg:space-x-12">
-                <aside className="w-full max-w-xl lg:w-48">
-                    <nav className="flex flex-col space-y-1 space-x-0">
+            <div className="flex flex-col"> 
+                <aside className="w-full">
+                    <nav className="flex space-y-1 space-x-2">
                         {sidebarNavItems.map((item, index) => {
                             return (
 
                                 <Button
                                     key={`${typeof item.href === 'string' ? item.href : item.href.url}-${index}`}
                                     size="sm"
-                                    variant="ghost"
-                                    asChild
-                                    className={cn('w-full justify-start', {
+                                    variant="ghost"     
+                                    asChild     
+                                    className={cn('justify-start', {
                                         'bg-muted': currentPath === (typeof item.href === 'string' ? item.href : item.href.url),
                                     })}
                                 >

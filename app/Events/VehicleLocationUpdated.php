@@ -24,8 +24,6 @@ class VehicleLocationUpdated implements ShouldBroadcastNow
         $this->lat = $lat; 
         $this->lng = $lng;
     }
-
-    
     
     public function broadcastOn()
     {

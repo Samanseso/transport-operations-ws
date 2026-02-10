@@ -45,14 +45,14 @@ const navItems: SidebarNavItems = {
 
 		{
 			title: 'Notifications',
-			href: "notifications",
+			href: "/notifications",
 			icon: Bell,
 			roles: ["all"],
 		},
 
 		{
 			title: 'Users',
-			href: "users",
+			href: "/users",
 			icon: User,
 			roles: ["all"],
 		},

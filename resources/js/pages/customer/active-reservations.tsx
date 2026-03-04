@@ -12,15 +12,16 @@ import TabOrderDetails from '@/components/tab-order-details'
 import { useState } from 'react'
 import TabDriverInformation from '@/components/tab-driver-information'
 import FloatingReservationDetails from '@/components/floating-reservation-details'
+import reservations from '@/routes/reservations'
 
 const breadcrumbs: BreadcrumbItem[] = [
 	{
-		title: 'Active Dispatches',
+		title: 'Active Reservations',
 		href: index().url,
 	},
 ];
 
-const ActiveDispatches = () => {
+const ActiveReservations = () => {
 	const props = usePage<{ reservations: Reservation[], selectedReservation: Reservation }>().props;
 	const isOpen = usePage<SharedData>().props.sidebarOpen;
 
@@ -58,7 +59,8 @@ const ActiveDispatches = () => {
 						</div>
 					</div>
 					<div className='flex-3 relative rounded-s-md overflow-hidden' style={{ height: "calc(100vh - 85px)", width: "100%" }}>
-						<div className="w-160 flex justify-center gap-10 absolute top-5 left-[50%] -translate-x-[50%] z-99 bg-white rounded-md pb-4 pt-5 shadow-md ps-7 pe-8 ">
+						{ props.reservations.length > 0 &&
+							<div className="w-160 flex justify-center gap-10 absolute top-5 left-[50%] -translate-x-[50%] z-99 bg-white rounded-md pb-4 pt-5 shadow-md ps-7 pe-8 ">
 							{
 								summary.map((item, index) => {
 									return (
@@ -75,9 +77,9 @@ const ActiveDispatches = () => {
 								})
 							}
 						</div>
+						}
 						
-						<FloatingReservationDetails reservation={selectedReservation} />	
-
+						{props.reservations.length > 0 && <FloatingReservationDetails reservation={selectedReservation} />}
 						
 
 
@@ -90,4 +92,4 @@ const ActiveDispatches = () => {
 	)
 }
 
-export default ActiveDispatches
+export default ActiveReservations

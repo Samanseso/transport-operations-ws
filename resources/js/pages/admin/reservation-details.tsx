@@ -2,32 +2,38 @@ import { BreadcrumbItem, SharedData } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import ReservationsLayout from '@/layouts/reservations/layout';
 import { usePage } from '@inertiajs/react';
-import { index } from '@/routes/reservations';
+import reservations, { index } from '@/routes/reservations';
 import { Reservation } from '../../types/index';
 import MapRoute from '@/components/map-route';
 import ReservationDetailsLayout from '@/layouts/reservation-details/layout';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import FloatingReservationDetails from '@/components/floating-reservation-details';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Reservations',
-        href: index().url,
-    },
-];
 
 export default function ReservationDetails() {
-    const { props } = usePage<{ data: Reservation }>();
-    const isOpen = usePage<SharedData>().props.sidebarOpen;
+    const { props } = usePage<{ reservation: Reservation }>();
+
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Reservations',
+            href: index().url,
+        },
+        {
+            title: props.reservation.customer.name,
+            href: "",
+        },
+    ];
+
 
     return (
         <SidebarProvider >
             <AppLayout breadcrumbs={breadcrumbs}>
                 <ReservationDetailsLayout>
-
-
-
-                    {/* <MapRoute reservation={props.data} /> */}
-
+                    <div className='flex-3 relative overflow-hidden' style={{ height: "calc(100vh - 80px)", width: "100%" }}>
+                        <FloatingReservationDetails reservation={props.reservation} />
+                        <MapRoute reservation={props.reservation} />
+                    </div>
                 </ReservationDetailsLayout>
             </AppLayout>
         </SidebarProvider>

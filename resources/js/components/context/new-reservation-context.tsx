@@ -38,7 +38,7 @@ export const CreateReservationProvider = ({ children }: { children: React.ReactN
         if (newReservation?.vehicle_id === null) return 0;
         if (newReservation?.pickup_geocode === null) return 1;
         if (newReservation?.dropoff_geocode === null) return 2;
-        if (newReservation?.customer_name === null) return 3;
+        if (newReservation?.customer_id === null) return 3;
 
         return 4;
     }
@@ -52,8 +52,7 @@ export const CreateReservationProvider = ({ children }: { children: React.ReactN
        
 
         const reservation: NewReservation = {
-            customer_name: newReservation?.customer_name,
-            contact_number: newReservation?.contact_number,
+            customer_id: newReservation?.customer_id,
             pickup_address: getDisplayName(newReservation?.pickup_geocode),
             pickup_latlng: `${newReservation?.pickup_geocode.point.lat},${newReservation?.pickup_geocode.point.lng}`,
             delivery_address: getDisplayName(newReservation?.dropoff_geocode),

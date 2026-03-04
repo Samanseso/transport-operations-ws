@@ -17,9 +17,7 @@ class ProcessStep4Request extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:150'],
-            'contact' => ['required', 'string', 'max:150'],
+            'customer_id' => ['required', 'string', 'max:255'],
             'service_type' => ['required', 'string', 'max:150'],
             'time' => ['required', 'string', 'max:150'],
             'cargo_details' => ['nullable', 'string', 'max:255'],

@@ -10,7 +10,7 @@ Route::middleware('auth')->group(function () {
     
     Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
-    Route::get('reservations/{reservation_id}', [ReservationController::class, 'retrieve'])->name('reservations.retrieve');
+    Route::get('reservations/{reservation_id}', [ReservationController::class, 'show'])->name('reservations.show');
     Route::delete('/reservations/{reservation_id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 
     Route::get('/reservations/create/step/{step}', [ReservationController::class, 'step'])->name('reservations.step');

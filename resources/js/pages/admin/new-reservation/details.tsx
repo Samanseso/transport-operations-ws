@@ -46,9 +46,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const Details = () => {
 
     const { props } = usePage<{
-        customer_name: string | undefined,
-        email: string | undefined,
-        contact: string | undefined,
+        customer_id: string | undefined,
         service_type: string | undefined,
         time: string | undefined,
         cargo_details: string | undefined,
@@ -72,17 +70,17 @@ const Details = () => {
 
                         {({ processing, errors }) => (
                             <div className='space-y-12 md:max-w-xl'>
-                                <div className='space-y-6'>
-                                    <HeadingSmall title="Customer information" description="Enter customer name and contact details" />
+                                {/* <div className='space-y-6'>
+                                    <HeadingSmall title="Customer" description="Enter customer name and contact details" />
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="customer_name">Name</Label>
+                                        <Label htmlFor="customer_id">Name</Label>   
 
                                         <Input
-                                            id="customer_name"
+                                            id="customer_id"
                                             className="mt-1 block w-full"
-                                            defaultValue={props.customer_name || ""}
-                                            name="customer_name"
+                                            defaultValue={props.customer_id || ""}
+                                            name="customer_id"
                                             required
                                             placeholder="Full name"
                                         />
@@ -90,39 +88,9 @@ const Details = () => {
                                         <InputError className="mt-2" message={errors.name} />
 
                                     </div>
+                                </div> */}
 
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="email">Email address</Label>
-
-                                        <Input
-                                            id="email"
-                                            type="email"
-                                            className="mt-1 block w-full"
-                                            defaultValue={props.email || ""}
-                                            name="email"
-                                            required
-                                            placeholder="Email address"
-                                        />
-
-                                        <InputError className="mt-2" message={errors.email} />
-                                    </div>
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="contact">Contact number</Label>
-
-                                        <Input
-                                            id="contact"
-                                            type="contact"
-                                            className="mt-1 block w-full"
-                                            defaultValue={props.contact || ""}
-                                            name="contact"
-                                            required
-                                            placeholder="Email address"
-                                        />
-
-                                        <InputError className="mt-2" message={errors.contact} />
-                                    </div>
-                                </div>
+                                <input type="hidden" name="customer_id" value={props.customer_id} />
 
                                 <div className='space-y-6'>
                                     <HeadingSmall title="Service and time" description="Select service type and requested date time" />

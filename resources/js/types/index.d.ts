@@ -105,8 +105,7 @@ export interface InputReservation {
     date: string;
     pickup_geocode: GeocodeHit;
     dropoff_geocode: GeocodeHit;
-    customer_name: string;
-    contact_number: string;
+    customer_id: string;
     requested_datetime: string;
     service_type: string;
     cargo_details: string;
@@ -114,8 +113,7 @@ export interface InputReservation {
 }
 
 export interface NewReservation {
-    customer_name?: string;
-    contact_number?: string;
+    customer_id?: string;
     pickup_address?: string;
     pickup_latlng?: string;
     delivery_address?: string;
@@ -148,9 +146,7 @@ export interface GeocodeHit {
 
 export interface Reservation {
     reservation_id: string;
-    customer_name: string;
-    email: string;
-    contact: string;
+    customer: User;
     status: string;
     pickup_address: string;
     pickup_latlng: string;

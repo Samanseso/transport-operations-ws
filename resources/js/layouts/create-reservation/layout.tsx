@@ -2,13 +2,15 @@ import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { ModalType, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import { Truck, MapPin, MapPinned, ClipboardPen, NotepadText } from 'lucide-react';
-import { type PropsWithChildren } from 'react';
+import { useEffect, type PropsWithChildren } from 'react';
 
 import { useNewReservation } from '@/components/context/new-reservation-context';
 import { step } from '@/routes/reservations';
+import { useModal } from '@/components/context/modal-context';
+import { Modal } from '@/components/modal';
 
 interface CreateReservationLayoutProps {
 
@@ -17,6 +19,19 @@ interface CreateReservationLayoutProps {
 
 
 export default function CreateReservationLayout({ children }: PropsWithChildren<CreateReservationLayoutProps>) {
+
+    const { props } = usePage<{ modal: ModalType }>();
+
+    const { content, createModal } = useModal();
+
+
+    useEffect(() => {
+        if (props.modal.status) {
+            createModal(props.modal);
+        }
+    }, [props.modal]);
+
+
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
@@ -59,6 +74,9 @@ export default function CreateReservationLayout({ children }: PropsWithChildren<
 
     return (
         <div className="px-4 py-6">
+
+            <Modal content={content} />
+
             <Heading title="Create Reservation" description="Follow the steps to create a new reservation." />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">

@@ -121,7 +121,7 @@ const TaskDetails = () => {
                                     </Avatar>
 
                                     <div>
-                                        <p className='font-bold text-sm'>{props.reservation.customer_name}</p>
+                                        <p className='font-bold text-sm'>{props.reservation.customer.name}</p>
                                         <p className='text-xs text-gray-500 flex items-center'>
                                             Pickup <Dot size={10} />
                                             <span className='w-50 truncate'>{pickup}</span>

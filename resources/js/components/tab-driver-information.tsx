@@ -9,8 +9,8 @@ import { Button } from './ui/button';
 
 const TabDriverInformation = ({ driver }: { driver: Driver }) => {
     return (
-        <div className='px-4 py-3'>
-            <div className="flex justify-between mb-3">
+        <div className='px-4 py-3 h-27'>
+            <div className="flex justify-between mb-2.75">
                 <div className='flex items-center gap-2'>
                     <Avatar className='size-10'>
                         <AvatarImage src={AvatarImageSource} />
@@ -36,7 +36,7 @@ const TabDriverInformation = ({ driver }: { driver: Driver }) => {
                     </Button>
                 </div>
             </div>
-            <div className='flex gap-12'>
+            <div className='flex justify-between'>
                 <div className=''>
                     <p className='text-xs text-gray-500'>Experience</p>
                     <p className='text-xs font-bold'>12 years</p>

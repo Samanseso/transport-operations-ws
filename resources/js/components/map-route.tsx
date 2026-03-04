@@ -16,7 +16,7 @@ import LiveVehicleLocation from './live-vehicle-location';
 
 interface MapRouteProps {
     reservation: Reservation;
-    padding: number;
+    padding?: number;
 
 }
 
@@ -27,7 +27,7 @@ interface routeSummary {
 }
 
 
-const MapRoute = ({ reservation, padding }: MapRouteProps) => {
+const MapRoute = ({ reservation, padding = 0 }: MapRouteProps) => {
 
 
     const [vehicleLoc, setVehicleLoc] = useState<LatLng>(new LatLng(14.577499898900426, 121.10226399999999));
@@ -40,11 +40,10 @@ const MapRoute = ({ reservation, padding }: MapRouteProps) => {
     useEffect(() => {
 
         const interval = setInterval(() => {
-            setVehicleLoc(prev => new LatLng(prev.lat - 0.00005, prev.lng - 0.00005))
+            // setVehicleLoc(prev => new LatLng(prev.lat - 0.00005, prev.lng - 0.00005))
         }, 500)
 
         getRoutes(
-            vehicleLoc,
             waypoints
         )
             .then(res => {
@@ -92,7 +91,7 @@ const MapRoute = ({ reservation, padding }: MapRouteProps) => {
                             <RoutePolyline routePoints={routePoints} driverPos={vehicleLoc} setBounds={setBounds} />
                         )}
 
-                        {vehicleLoc && <LiveVehicleLocation vehicleLoc={vehicleLoc} />}
+                        {/* {vehicleLoc && <LiveVehicleLocation vehicleLoc={vehicleLoc} />} */}
 
                         <Marker position={waypoints[0]} />
                         <Marker position={waypoints[1]} />

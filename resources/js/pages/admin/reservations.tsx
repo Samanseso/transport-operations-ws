@@ -1,5 +1,5 @@
 
-import { ModalType, SharedData, type BreadcrumbItem } from '@/types';
+import { ModalType, PaginationType, Reservation, SharedData, type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import ReservationsLayout from '@/layouts/reservations/layout';
 import ReseravtionList from '@/components/reservation-list';
@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Reservations() {
     
-    const { props } = usePage<{ modal: ModalType }>();
+    const { props } = usePage<{ reservations: PaginationType<Reservation[]> , modal: ModalType }>();
     
     const isOpen = usePage<SharedData>().props.sidebarOpen;
 
@@ -40,7 +40,7 @@ export default function Reservations() {
             <AppLayout breadcrumbs={breadcrumbs}>
                 <ReservationsLayout>
                     <div className='h-full'>
-                        <ReseravtionList />
+                        <ReseravtionList reservations={props.reservations} />
 
                         <Modal content={content} />
 

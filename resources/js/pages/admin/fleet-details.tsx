@@ -30,7 +30,7 @@ const FleetDetails = () => {
         <SidebarProvider defaultOpen={isOpen}>
             <AppLayout breadcrumbs={breadcrumbs} >
                 <FleetmanagementLayout vehicles={props.vehicles} selectedVehicle={props.selectedVehicle} >
-                    <div className='flex flex-col border-s ps-3' style={{ height: "calc(100vh - 73px)", width: "100%" }}>
+                    <div className='flex flex-col ps-3' style={{ height: "calc(100vh - 73px)", width: "100%" }}>
                         <div className='flex justify-between items-center mb-3'>
                             <div className='flex items-center gap-2'>
                                 <Avatar className='size-10'>
@@ -92,11 +92,10 @@ const FleetDetails = () => {
                             </figure>
                         </div>
 
-                        <div className='flex flex-row gap-2'>
-                            <div className='flex-1'>
+                        <div>
+                            <div>
                                 <div className='flex justify-between item-center my-5'>
-                                    <p className='font-semibold'>Routes</p>
-                                    <Link className='underline underline-offset-5 decoration-dashed text-sm'>History</Link>
+                                    <p className='font-semibold'>History</p>
                                 </div>
 
                                 <div>
@@ -137,21 +136,13 @@ const FleetDetails = () => {
                                                         </div>
                                                     }
 
-
-
-
                                                 </div>
-
-
                                             </div>
                                         )
                                     })}
                                 </div>
 
 
-
-                            </div>
-                            <div className='flex-1'>
 
                             </div>
                         </div>

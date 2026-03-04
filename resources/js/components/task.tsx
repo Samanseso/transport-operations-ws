@@ -12,9 +12,9 @@ const Task = ({ reservation }: { reservation: Reservation }) => {
     const startDate = new Date(reservation.dispatch.schedule);
     const endDate = new Date(reservation.date);
     const dateOptions: Intl.DateTimeFormatOptions = {
-        month: 'short' , 
+        month: 'short',
         day: 'numeric',
-        hour: 'numeric', 
+        hour: 'numeric',
         minute: '2-digit'
     };
 
@@ -26,10 +26,10 @@ const Task = ({ reservation }: { reservation: Reservation }) => {
 
 
     return (
-        <Link as="div" className="bg-gray-100 rounded-sm mb-2 py-3 cursor-pointer" href={show(reservation.dispatch.vehicle_id)}>
+            <div className="bg-gray-100 rounded-sm mb-2 py-3 cursor-pointer">
             <div className="px-3">
                 <div className='flex justify-between items-center mb-1'>
-                    <p className='font-bold'>{reservation.customer_name}</p>
+                    <p className='font-bold'>{reservation.customer.name}</p>
                     <StatusTag text={reservation.dispatch.status} />
                 </div>
 
@@ -38,11 +38,11 @@ const Task = ({ reservation }: { reservation: Reservation }) => {
                 <div className='flex flex-row gap-2'>
                     <div className='w-20 flex flex-col gap-2'>
                         <p className='text-xs text-gray-500 text-nowrap'>
-                            {startDate.toLocaleString('default', dateOptions)} 
+                            {startDate.toLocaleString('default', dateOptions)}
 
                         </p>
                         <p className='text-xs text-gray-500 text-nowrap'>
-                            {endDate.toLocaleString('default', dateOptions)} 
+                            {endDate.toLocaleString('default', dateOptions)}
 
                         </p>
                     </div>
@@ -73,8 +73,8 @@ const Task = ({ reservation }: { reservation: Reservation }) => {
 
                 </div>
             </div>
+        </div>
 
-        </Link>
     )
 }
 

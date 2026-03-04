@@ -21,7 +21,7 @@ class TaskController extends Controller
         $assigned_dispatches = Dispatch::where("vehicle_id", $assigned_vehicle)->pluck("reservation_id");
 
         return Inertia::render('driver/tasks', [
-            'reservations' => Reservation::with('dispatch')
+            'reservations' => Reservation::with(['dispatch', 'customer'])
                 ->whereHas('dispatch', function ($query) use ($assigned_dispatches) {
                     $query->whereIn('reservation_id', $assigned_dispatches);
                 })
@@ -32,7 +32,7 @@ class TaskController extends Controller
     public function show($vehicle_id)
     {
         return Inertia::render('driver/task-details', [
-            'reservation' => Reservation::with('dispatch')
+            'reservation' => Reservation::with(['dispatch', 'customer'])
                 ->whereHas('dispatch', function ($query) use ($vehicle_id) {
                     $query->where('vehicle_id', $vehicle_id);
                 })

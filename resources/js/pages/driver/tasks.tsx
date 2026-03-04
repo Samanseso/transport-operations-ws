@@ -1,8 +1,8 @@
 import { SidebarProvider } from '@/components/ui/sidebar';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Reservation } from '@/types'
-import { usePage } from '@inertiajs/react'
-import { index } from '@/routes/task';
+import { Link, usePage } from '@inertiajs/react'
+import { index, show } from '@/routes/task';
 import { LatLng } from 'leaflet';
 import Task from '@/components/task';
 
@@ -29,9 +29,9 @@ const Tasks = () => {
 
                         
                         return (
-                            <div key={index} className='p-2 border-b'>
+                            <Link as="div" href={show(reservation.dispatch.vehicle_id)} key={index} className='p-2 border-b'>
                                 <Task reservation={reservation}  />
-                            </div>
+                            </Link>
                         )
                     })}
                 </div>

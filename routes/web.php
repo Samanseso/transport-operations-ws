@@ -21,6 +21,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         } elseif ($role === 'DRIVER') {
             
             return Inertia::render('driver/dashboard');
+        } elseif ($role == 'CUSTOMER') {
+            return Inertia::render('customer/dashboard');
+        }
+        else {
+            abort(403, 'Unauthorized');
         }
     })->name('dashboard');
 });
@@ -34,3 +39,5 @@ require __DIR__.'/active-dispatches.php';
 require __DIR__.'/fleet.php';
 require __DIR__.'/task.php';
 
+require __DIR__.'/my-reservations.php';
+require __DIR__.'/my-active-reservations.php';

@@ -10,7 +10,7 @@ import { ColumnsMenu } from "./columns-menu";
 import { BreadcrumbItem, PaginationType } from "@/types";
 import { type User } from "@/types";
 import '../bootstrap';
-import { customer } from "@/routes/user";
+import user, { customer } from "@/routes/user";
 import CreateUserModal from "./create-user-modal";
 import UserViewModal from "./user-view-modal";
 
@@ -39,6 +39,7 @@ const defaultColumns = [0, 1, 2, 3, 4, 5];
 export default function UserList() {
     const { props } = usePage<{ users: PaginationType<User[]> }>();
 
+
     const [users, setUsers] = useState<User[]>(props.users.data);
     const [open, setOpen] = useState(false);
     const [viewModalId, setViewModalId] = useState<string | number | null>(null);
@@ -49,12 +50,16 @@ export default function UserList() {
 
     const [visibleColumns, setVisibleColumns] = useState<number[]>(initialVisible);
 
-    const [filteredUsers, setFilteredUsers] = useState<string[][]>(
-        users
+    const [filteredUsers, setFilteredUsers] = useState<string[][]>([]);
+
+    useEffect(() => {
+        setUsers(props.users.data);
+        setFilteredUsers(users
             .map((u) => Object.values(u))
             .map((row) => row.filter((_, idx) => visibleColumns.includes(idx)))
             .map((row) => row.map((cell) => (cell === null ? "" : String(cell))))
-    );
+        )
+    }, [props.users])
 
     const [searchInput, setSearchInput] = useState("");
     const [selectedUserId, setSelectedUserId] = useState<string>("");
@@ -80,7 +85,7 @@ export default function UserList() {
             .map((row) => row.map((cell) => (cell === null ? "" : String(cell))))
             .filter((row) =>
                 row.some((cell) => cell.toLowerCase().includes(lowerSearch))
-            );  
+            );
 
         setFilteredUsers(newFiltered);
     }, [users, visibleColumns, searchInput]);
@@ -130,7 +135,7 @@ export default function UserList() {
 
             {/* <Pagination data={props.users} /> */}
 
-            {viewModalId && <UserViewModal viewModalId={viewModalId}  setViewModalId={setViewModalId} />}
+            {viewModalId && <UserViewModal viewModalId={viewModalId} setViewModalId={setViewModalId} />}
 
 
             {open && <CreateUserModal setOpen={setOpen} />}

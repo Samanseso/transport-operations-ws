@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { Bell, BookOpen, Calendar, CalendarDays, Folder, LayoutGrid, Mail, MapPin, PanelLeftIcon, Route, Truck, User } from "lucide-react"
+import { Bell, BookOpen, Calendar, CalendarDays, File, Folder, LayoutGrid, Mail, MapPin, PanelLeftIcon, Route, Truck, User } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -54,7 +54,7 @@ const navItems: SidebarNavItems = {
 			title: 'Users',
 			href: "/users",
 			icon: User,
-			roles: ["all"],
+			roles: ["ADMINISTRATOR"],
 		},
 	],
 
@@ -64,6 +64,20 @@ const navItems: SidebarNavItems = {
 			href: '/reservations',
 			icon: CalendarDays,
 			roles: ["ADMINISTRATOR"],
+		},
+
+		{
+			title: 'My Reservations',
+			href: '/my-reservations',
+			icon: CalendarDays,
+			roles: ["CUSTOMER"],
+		},
+
+		{
+			title: 'Active Reservations',
+			href: '/my-active-reservations',
+			icon: CalendarDays,
+			roles: ["CUSTOMER"],
 		},
 
 		{
@@ -83,16 +97,9 @@ const navItems: SidebarNavItems = {
 
 
 		{
-			title: 'Routing Information',
-			href: '/routing-information',
-			icon: Route,
-			roles: ["ADMINISTRATOR"],
-		},
-
-		{
-			title: 'Invoicing',
-			href: '/invoicing',
-			icon: Mail,
+			title: 'System Logs',
+			href: '/logs',
+			icon: File,
 			roles: ["ADMINISTRATOR"],
 		},
 

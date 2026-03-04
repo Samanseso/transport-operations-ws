@@ -19,6 +19,7 @@ use App\Http\Requests\Reservation\ProcessStep4Request;
 
 use App\Events\ReservationDeleted;
 use App\Events\ReservationCreated;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
@@ -44,24 +45,32 @@ class ReservationController extends Controller
 
     public function index(Request $request)
     {
+
+        if ($request->user()->role === 'CUSTOMER') {
+            return redirect()->route('my-reservations.index');
+        }
         return Inertia::render('admin/reservations', [
-            'reservations' => Reservation::paginate(12)
+            'reservations' => Reservation::with(['customer', 'dispatch'])->orderBy('created_at', 'desc')->paginate(10)->withQueryString(),
         ]);
     }
 
-    public function retrieve($id)
+    public function show($id)
     {
-        $reservation = Reservation::where('reservation_id', $id)->firstOrFail();
-       
+        $reservation = Reservation::with([
+            'customer',
+            'dispatch',
+            'dispatch.vehicle.driver',
+        ])->where('reservation_id', $id)->firstOrFail();
+
         return Inertia::render("admin/reservation-details", [
-            'data' => $reservation,
+            'reservation' => $reservation,
         ]);
     }
 
     public function destroy(Request $request, $reservation_id): RedirectResponse
     {
         $page = $this->get_current_page($request);
-        
+
 
         $reservation = Reservation::where('reservation_id', $reservation_id)->firstOrFail();
 
@@ -70,11 +79,11 @@ class ReservationController extends Controller
         $reservation->delete();
 
         $dispatch = Dispatch::where('reservation_id', $reservation_id)->firstOrFail();
-        
+
         if ($dispatch) {
             $dispatch->delete();
         }
-        
+
 
         return redirect()
             ->route('reservations.index', ['page' => $page])
@@ -91,11 +100,16 @@ class ReservationController extends Controller
 
         if ((int)$step > 1 && (int)$step > session('current_step')) {
             return redirect()
-            ->route('reservations.step', ['step' => session('current_step')])
-            ->with(['message' => "Please finish step " . session('current_step') . "first!"]);
+                ->route('reservations.step', ['step' => session('current_step') ?? 1])
+                ->with([
+                    'modal_status' => "error",
+                    'modal_action' => "create",
+                    'modal_title' => "Invalid action!",
+                    'modal_message' => "Please finish previous steps first.",
+                ]);;
         };
 
-       
+
 
         switch ($step) {
             case 1:
@@ -105,7 +119,7 @@ class ReservationController extends Controller
             case 3:
                 return $this->renderStep3();
             case 4:
-                return $this->renderStep4();
+                return $this->renderStep4($request);
             case 5:
                 return $this->renderStep5();
             default:
@@ -121,7 +135,7 @@ class ReservationController extends Controller
             $parsedDate = Carbon::today()->toDateString();
         }
 
-        
+
 
 
 
@@ -164,12 +178,10 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function renderStep4()
+    public function renderStep4(Request $request)
     {
         return Inertia::render('admin/new-reservation/details', [
-            'customer_name'         => session('customer_name'),
-            'email'                 => session('email'),
-            'contact'               => session('contact'),
+            'customer_id'           => $request->user()->id,
             'service_type'          => session('service_type'),
             'time'                  => session('time'),
             'cargo_details'         => session('cargo_details'),
@@ -219,15 +231,11 @@ class ReservationController extends Controller
 
     public function processStep4(ProcessStep4Request $request): RedirectResponse
     {
-        
+
 
         $validated = $request->validated();
 
-        
 
-        $request->session()->put('customer_name', $validated['customer_name']);
-        $request->session()->put('email', $validated['email']);
-        $request->session()->put('contact', $validated['contact']);
         $request->session()->put('service_type', $validated['service_type']);
         $request->session()->put('time', $validated['time']);
         $request->session()->put('cargo_details', $validated['cargo_details']);
@@ -254,9 +262,7 @@ class ReservationController extends Controller
             'pickup_latlng'       => session('pickup_latlng'),
             'dropoff_address'     => session('dropoff_address'),
             'dropoff_latlng'      => session('dropoff_latlng'),
-            'customer_name'       => session('customer_name'),
-            'email'               => session('email'),
-            'contact'             => session('contact'),
+            'customer_id'         => $request->user()->id,
             'service_type'        => session('service_type'),
             'date'                => session('date'),
             'time'                => session('time'),
@@ -269,16 +275,13 @@ class ReservationController extends Controller
             'pickup_latlng',
             'dropoff_address',
             'dropoff_latlng',
-            'customer_name',
-            'email',
-            'contact',
             'service_type',
             'time',
             'cargo_details',
             'special_instructions',
         ]);
 
-        broadcast(new ReservationCreated ($reservation));
+        broadcast(new ReservationCreated($reservation));
 
         return redirect()
             ->route('reservations.index')
@@ -289,5 +292,4 @@ class ReservationController extends Controller
                 'modal_message' => "Reservation " . $reservation->reservation_id . " was created successfully.",
             ]);
     }
-
 }

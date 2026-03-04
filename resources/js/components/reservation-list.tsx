@@ -10,9 +10,11 @@ import { Pagination } from "./pagination";
 import { SlidersHorizontal, UserPlus, PencilLine, Download, Plus } from "lucide-react";
 import { Link } from "@inertiajs/react";
 import { DeleteReservation } from "./delete-reservation";
-import { retrieve, step } from "@/routes/reservations";
+import { show, step } from "@/routes/reservations";
 import { ColumnsMenu } from "./columns-menu";
 import '../bootstrap';
+import Task from "./task";
+import reservations from '../routes/reservations/index';
 
 const breadcrumbs: BreadcrumbItem[] = [
 	{
@@ -56,12 +58,12 @@ const defaultColumns = [
 // pusher.connection.bind('connected', () => { console.log("✅ Connected to Pusher"); });
 
 
-export default function ReseravtionList() {
-	const { props } = usePage<{ reservations: PaginationType<Reservation[]> }>();
+export default function ReseravtionList({ reservations }: { reservations: PaginationType<Reservation[]> }) {
+	
 
-	const [reservation, setReservation] = useState<Reservation[]>(props.reservations.data);
+	const [reservation, setReservation] = useState<Reservation[]>(reservations.data);
 	const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
-	const [filteredReseravtions, setFilteredReseravtions] = useState<Reservation[][]>(reservation.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
+	const [filteredReservations, setFilteredReservations] = useState<Reservation[][]>(reservation.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
 	const [searchInput, setSearchInput] = useState('');
 	const [selectedStudent, setSelectedStudent] = useState<string>('');
 	const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
@@ -90,9 +92,9 @@ export default function ReseravtionList() {
 		});
 
 
-		channel.listen(".ReservationDeleted", (e: { reservation_id : string }) => {
+		channel.listen(".ReservationDeleted", (e: { reservation_id: string }) => {
 			console.log(e);
-			setReservation(prev => prev.filter(item => item.reservation_id !== e.reservation_id) );
+			setReservation(prev => prev.filter(item => item.reservation_id !== e.reservation_id));
 		});
 
 		return () => {
@@ -117,20 +119,17 @@ export default function ReseravtionList() {
 							item.toString().toLowerCase().includes(lowerSearchInput)
 						);
 					});
-		setFilteredReseravtions(newFilteredStudents);
+		setFilteredReservations(newFilteredStudents);
 	}, [reservation, visibleColumns, searchInput])
 
-
 	return (
-
-
 		<div>
 			<div className="justify-between flex items-center py-3 px-0 rounded-t-lg mb-1">
-				<p className="font-bold text-sm">Recent Reservations</p>
+				<h2 className="text-xl font-bold">Reservations</h2>
 				<div className="flex gap-2.5">
-					<div className="hidden md:block">
+					{/* <div className="hidden md:block">
 						<ColumnsMenu columns={columns} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
-					</div>
+					</div> */}
 
 					<Button variant="outline" size="sm" className="hidden md:flex text-xs"><SlidersHorizontal />Filter</Button>
 					<Button variant="outline" size="sm" className="hidden md:flex text-xs"><Download />Export</Button>
@@ -140,14 +139,24 @@ export default function ReseravtionList() {
 
 				</div>
 			</div>
-			<DataTable
+			{/* <DataTable
 				columns={columns.filter((_, index) => visibleColumns.includes(index))}
-				data={filteredReseravtions}
+				data={filteredReservations}
 				searchInput={searchInput}
 				doDelete={doDelete}
 				viewLink={(id) => retrieve.url({ reservation_id: id })}
 			/>
-			<Pagination data={props.reservations} />
+			<Pagination data={reservations} /> */}
+
+
+			<div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				{reservation.map((r, index) => (
+					<Link as="div" key={index} href={show(r.reservation_id)}>
+						<Task reservation={r} />
+					</Link>
+				))}
+			</div>
+
 
 			<DeleteReservation
 				reservation_id={selectedStudent}

@@ -19,9 +19,7 @@ class Reservation extends Model
     protected $fillable = [
         'reservation_id',
         'status',
-        'customer_name',    
-        'email',
-        'contact',
+        'customer_id',    
         'pickup_address',
         'pickup_latlng',
         'dropoff_address',
@@ -38,5 +36,10 @@ class Reservation extends Model
     public function dispatch()
     {
         return $this->hasOne(Dispatch::class, 'reservation_id', 'reservation_id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'customer_id', 'id');
     }
 }

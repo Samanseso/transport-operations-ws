@@ -11,7 +11,7 @@ import { SidebarProvider, useSidebar } from '@/components/ui/sidebar';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Driver Dashboard',
+        title: 'Customer Dashboard',
         href: dashboard().url,
     },
 ];

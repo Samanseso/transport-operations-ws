@@ -18,7 +18,7 @@ export default function ReservationDetailsLayout({ children }: PropsWithChildren
 
 
     return (
-        <div className="p-4">
+        <div className="">
 
             <div className="flex-1 relative">
                 <section>{children}</section>

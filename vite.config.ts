@@ -13,7 +13,7 @@ export default defineConfig({
         }),
         react(),
         tailwindcss(),
-        wayfinder({
+        process.env.DISABLE_WAYFINDER === 'true' ? null : wayfinder({
             formVariants: true,
         }),
     ],

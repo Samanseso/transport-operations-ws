@@ -1,0 +1,22 @@
+import Settings from './Settings'
+import Auth from './Auth'
+import UserController from './UserController'
+import ReservationController from './ReservationController'
+import ActiveDispatchController from './ActiveDispatchController'
+import FleetController from './FleetController'
+import Driver from './Driver'
+import MyReservationController from './MyReservationController'
+import MyActiveReservationsController from './MyActiveReservationsController'
+const Controllers = {
+    Settings: Object.assign(Settings, Settings),
+Auth: Object.assign(Auth, Auth),
+UserController: Object.assign(UserController, UserController),
+ReservationController: Object.assign(ReservationController, ReservationController),
+ActiveDispatchController: Object.assign(ActiveDispatchController, ActiveDispatchController),
+FleetController: Object.assign(FleetController, FleetController),
+Driver: Object.assign(Driver, Driver),
+MyReservationController: Object.assign(MyReservationController, MyReservationController),
+MyActiveReservationsController: Object.assign(MyActiveReservationsController, MyActiveReservationsController),
+}
+
+export default Controllers

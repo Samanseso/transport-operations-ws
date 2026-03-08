@@ -1,7 +1,7 @@
 FROM node:20
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    php-cli php-mbstring php-xml php-zip php-curl php-intl php-sqlite3 php-mysql \
+    php-cli php-mbstring php-xml php-zip php-curl php-intl php-sqlite3 php-mysql php-pgsql \
     git unzip curl supervisor ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 

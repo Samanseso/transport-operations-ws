@@ -13,4 +13,12 @@ fi
 chown -R www-data:www-data storage bootstrap/cache || true
 chmod -R 775 storage bootstrap/cache || true
 
+# Clear cached config (important when using Render env variables)
+php artisan config:clear
+php artisan cache:clear
+
+# Run database migrations
+php artisan migrate --force || true
+
+# Start supervisor
 exec "$@"

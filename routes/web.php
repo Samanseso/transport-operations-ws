@@ -11,10 +11,16 @@ Route::get('/', function () {
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware([])->group(function () {
 
     Route::get('dashboard', function (Request $request) {
-        $role = $request->user()->role;
+        $user = $request->user();
+
+        if (! $user) {
+            return Inertia::render('admin/dashboard');
+        }
+
+        $role = $user->role;
 
         if ($role === 'ADMINISTRATOR') {
             return Inertia::render('admin/dashboard');

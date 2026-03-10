@@ -8,19 +8,6 @@ import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
 import { CreateReservationProvider } from './components/context/new-reservation-context';
 import { ModalProvider } from './components/context/modal-context';
-import { configureEcho } from '@laravel/echo-react';
-import Pusher from 'pusher-js';
-
-configureEcho({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    client: Pusher,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: true,
-    enabledTransports: ['ws', 'wss'],
-});
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';

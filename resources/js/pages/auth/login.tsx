@@ -38,7 +38,8 @@ export default function Login({ status, canResetPassword }: LoginProps) {
             if (token) {
                 localStorage.setItem('auth_token', token);
                 axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-                document.cookie = `auth_token=${token}; Path=/; Max-Age=7200; SameSite=Lax; Secure`;
+                const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+                document.cookie = `auth_token=${token}; Path=/; Max-Age=7200; SameSite=Lax${secure}`;
             }
 
             router.visit('/dashboard');

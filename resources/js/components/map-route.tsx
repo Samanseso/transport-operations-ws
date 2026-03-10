@@ -39,32 +39,32 @@ const MapRoute = ({ reservation, padding = 0 }: MapRouteProps) => {
 
     useEffect(() => {
 
-        const interval = setInterval(() => {
-            // setVehicleLoc(prev => new LatLng(prev.lat - 0.00005, prev.lng - 0.00005))
-        }, 500)
+        // const interval = setInterval(() => {
+        //     // setVehicleLoc(prev => new LatLng(prev.lat - 0.00005, prev.lng - 0.00005))
+        // }, 500)
 
-        getRoutes(
-            waypoints
-        )
-            .then(res => {
-                setRoutePoints(res);
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        // getRoutes(
+        //     waypoints
+        // )
+        //     .then(res => {
+        //         setRoutePoints(res);
+        //     })
+        //     .catch(err => {
+        //         console.log(err)
+        //     })
 
 
 
-        const channel = window.Echo.channel("vehicles");
+        // const channel = window.Echo.channel("vehicles");
 
-        channel.listen(".VehicleLocationUpdated", (e: VehicleLocation) => {
-            setVehicleLoc(new LatLng(e.lat, e.lng));
-        });
+        // channel.listen(".VehicleLocationUpdated", (e: VehicleLocation) => {
+        //     setVehicleLoc(new LatLng(e.lat, e.lng));
+        // });
 
-        return () => {
-            clearInterval(interval);
-            try { (window as any).Echo.leaveChannel("vehicles"); } catch { }
-        };
+        // return () => {
+        //     clearInterval(interval);
+        //     try { (window as any).Echo.leaveChannel("vehicles"); } catch { }
+        // };
 
     }, []);
 

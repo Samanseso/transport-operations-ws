@@ -80,26 +80,26 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
 	}
 
 	useEffect(() => {
-		const channel = window.Echo.channel("reservations");
+		// const  = window.Echo.channel("reservations");
 
-		channel.listen(".ReservationCreated", (e: { reservation: Reservation }) => {
-			setReservation(prev => {
-				if (prev.some(r => r.reservation_id === e.reservation.reservation_id)) {
-					return prev;
-				}
-				return [...prev, e.reservation];
-			});
-		});
+		// channel.listen(".ReservationCreated", (e: { reservation: Reservation }) => {
+		// 	setReservation(prev => {
+		// 		if (prev.some(r => r.reservation_id === e.reservation.reservation_id)) {
+		// 			return prev;
+		// 		}
+		// 		return [...prev, e.reservation];
+		// 	});
+		// });
 
 
-		channel.listen(".ReservationDeleted", (e: { reservation_id: string }) => {
-			console.log(e);
-			setReservation(prev => prev.filter(item => item.reservation_id !== e.reservation_id));
-		});
+		// channel.listen(".ReservationDeleted", (e: { reservation_id: string }) => {
+		// 	console.log(e);
+		// 	setReservation(prev => prev.filter(item => item.reservation_id !== e.reservation_id));
+		// });
 
-		return () => {
-			window.Echo.leave("reservations");
-		};
+		// return () => {
+		// 	window.Echo.leave("reservations");
+		// };
 	}, []);
 
 
@@ -139,7 +139,7 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
 
 				</div>
 			</div>
-			{/* <DataTable
+			{/* <channelDataTable
 				columns={columns.filter((_, index) => visibleColumns.includes(index))}
 				data={filteredReservations}
 				searchInput={searchInput}

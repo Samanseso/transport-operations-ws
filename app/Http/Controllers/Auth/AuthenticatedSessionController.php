@@ -43,7 +43,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->user()?->currentAccessToken()?->delete();
+        $user = $request->user();
+        if ($user) {
+            $token = $user->currentAccessToken();
+            if ($token && method_exists($token, 'delete')) {
+                $token->delete();
+            }
+        }
 
         return redirect('/')->withCookie(cookie()->forget('auth_token'));
     }

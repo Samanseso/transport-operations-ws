@@ -17,6 +17,11 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
     const handleLogout = () => {
         cleanup();
         router.flushAll();
+        localStorage.removeItem('auth_token');
+        document.cookie = 'auth_token=; Path=/; Max-Age=0; SameSite=Lax; Secure';
+        if (window.axios) {
+            delete window.axios.defaults.headers.common.Authorization;
+        }
     };
 
     return (

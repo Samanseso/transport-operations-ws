@@ -13,7 +13,7 @@ class CacheSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('cache')->insert([
+        $rows = [
             [
                 'key' => 'laravel_cache_356a192b7913b04c54574d18c28d46e6395428ab',
                 'value' => 'i:1;',
@@ -64,6 +64,8 @@ class CacheSeeder extends Seeder
                 'value' => 'i:1768971803;',
                 'expiration' => 1768971803
             ]
-        ]);
+        ];
+
+        DB::table('cache')->upsert($rows, ['key'], ['value', 'expiration']);
     }
 }

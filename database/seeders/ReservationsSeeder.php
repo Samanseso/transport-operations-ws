@@ -13,7 +13,7 @@ class ReservationsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('reservations')->insert([
+        $rows = [
             [
                 'reservation_id' => 'a0c17092-4d04-462f-bcd6-9ea30fec3978',
                 'customer_id' => 4,
@@ -78,6 +78,26 @@ class ReservationsSeeder extends Seeder
                 'created_at' => '2026-03-03 14:17:26',
                 'updated_at' => '2026-03-03 14:17:26'
             ]
-        ]);
+        ];
+
+        DB::table('reservations')->upsert(
+            $rows,
+            ['reservation_id'],
+            [
+                'customer_id',
+                'status',
+                'pickup_address',
+                'pickup_latlng',
+                'dropoff_address',
+                'dropoff_latlng',
+                'date',
+                'time',
+                'service_type',
+                'cargo_details',
+                'special_instructions',
+                'created_at',
+                'updated_at',
+            ]
+        );
     }
 }

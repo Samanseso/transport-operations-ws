@@ -13,7 +13,7 @@ class DriversSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('drivers')->insert([
+        $rows = [
             [
                 'driver_id' => 'DRV-1001',
                 'name' => 'Clarisse Reyes',
@@ -59,6 +59,12 @@ class DriversSeeder extends Seeder
                 'created_at' => '2025-03-05 07:45:00',
                 'updated_at' => '2025-03-05 07:45:00'
             ]
-        ]);
+        ];
+
+        DB::table('drivers')->upsert(
+            $rows,
+            ['driver_id'],
+            ['name', 'contact_number', 'license_number', 'status', 'created_at', 'updated_at']
+        );
     }
 }

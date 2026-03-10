@@ -13,7 +13,7 @@ class PricingSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('pricing')->insert([
+        $rows = [
             [
                 'pricing_id' => 'PRC-1001',
                 'service_type' => 'Leisure / Personal Transport',
@@ -56,6 +56,12 @@ class PricingSeeder extends Seeder
                 'distance_rate' => 38.00,
                 'travel_time_rate' => 550.00
             ]
-        ]);
+        ];
+
+        DB::table('pricing')->upsert(
+            $rows,
+            ['pricing_id'],
+            ['service_type', 'base_rate', 'distance_rate', 'travel_time_rate']
+        );
     }
 }

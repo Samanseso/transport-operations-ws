@@ -13,7 +13,7 @@ class VehiclesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('vehicles')->insert([
+        $rows = [
             [
                 'vehicle_id' => 'VH-1001',
                 'driver_id' => 'DRV-1001',
@@ -64,6 +64,12 @@ class VehiclesSeeder extends Seeder
                 'created_at' => '2025-05-20 13:20:00',
                 'updated_at' => '2025-09-04 15:40:00'
             ]
-        ]);
+        ];
+
+        DB::table('vehicles')->upsert(
+            $rows,
+            ['vehicle_id'],
+            ['driver_id', 'plate_number', 'model', 'capacity', 'status', 'created_at', 'updated_at']
+        );
     }
 }

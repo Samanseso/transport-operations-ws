@@ -13,8 +13,6 @@ class MigrationsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('migrations')->insert([
-           
-        ]);
+        // Intentionally left blank.
     }
 }

@@ -13,7 +13,7 @@ class SessionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('sessions')->insert([
+        $rows = [
             [
                 'id' => 'bMdmHDIEg7aIllxRcK0FaZhYgE8fgjq5xZLWnTjz',
                 'user_id' => null,
@@ -46,6 +46,12 @@ class SessionsSeeder extends Seeder
                 'payload' => 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiWFdaWkMyYVl4UG50TEt5ekhoeDEzTXUwODVZbmhsN0laeVhpMkQ2cCI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7czo1OiJyb3V0ZSI7czo0OiJob21lIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==',
                 'last_activity' => 1772782576
             ]
-        ]);
+        ];
+
+        DB::table('sessions')->upsert(
+            $rows,
+            ['id'],
+            ['user_id', 'ip_address', 'user_agent', 'payload', 'last_activity']
+        );
     }
 }

@@ -13,7 +13,7 @@ class LogsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('logs')->insert([
+        $rows = [
             [
                 'datelog' => '2025-09-24',
                 'timelog' => '13:18:32',
@@ -814,9 +814,15 @@ class LogsSeeder extends Seeder
                 'performed_to' => 'DRV-20251008170156',
                 'description' => 'Driver was deleted'
             ]
-        ]);
+        ];
 
-        DB::table('logs')->insert([
+        DB::table('logs')->upsert(
+            $rows,
+            ['datelog', 'timelog', 'action', 'module', 'performed_to', 'description'],
+            []
+        );
+
+        $rows = [
             [
                 'datelog' => '2025-10-15',
                 'timelog' => '07:06:21',
@@ -849,6 +855,12 @@ class LogsSeeder extends Seeder
                 'performed_to' => 'RES-20251016061113',
                 'description' => 'Dispatch was assigned to Marco Diaz / Isuzu NQR.'
             ]
-        ]);
+        ];
+
+        DB::table('logs')->upsert(
+            $rows,
+            ['datelog', 'timelog', 'action', 'module', 'performed_to', 'description'],
+            []
+        );
     }
 }

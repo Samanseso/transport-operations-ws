@@ -13,7 +13,7 @@ class PaymentsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('payments')->insert([
+        $rows = [
             [
                 'reservation_id' => 'RES-20250924011822',
                 'distance' => 2.138218,
@@ -140,6 +140,12 @@ class PaymentsSeeder extends Seeder
                 'reference_number' => '',
                 'paid_at' => ''
             ]
-        ]);
+        ];
+
+        DB::table('payments')->upsert(
+            $rows,
+            ['reservation_id'],
+            ['distance', 'travel_time', 'total_amount', 'payment_method', 'reference_number', 'paid_at']
+        );
     }
 }

@@ -21,7 +21,7 @@ php artisan cache:clear
 
 
 # Run database migrations (fail fast if this does not succeed)
-php artisan migrate --force
+php artisan migrate --seed --force
 
 # Start supervisor
 exec "$@"

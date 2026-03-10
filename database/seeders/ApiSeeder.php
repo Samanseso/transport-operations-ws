@@ -13,7 +13,7 @@ class ApiSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('api')->insert([
+        $rows = [
             [
                 'api_id' => 'API-1001',
                 'property_name' => 'Map API Key',
@@ -24,6 +24,8 @@ class ApiSeeder extends Seeder
                 'property_name' => 'Map Template Path',
                 'property_value' => 'file:///C:/Users/U%20S%20E%20R%20-%20P%20C/source/repos/Transport_Operations_Software/MapTemplate.html'
             ]
-        ]);
+        ];
+
+        DB::table('api')->upsert($rows, ['api_id'], ['property_name', 'property_value']);
     }
 }

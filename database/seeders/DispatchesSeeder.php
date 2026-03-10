@@ -13,7 +13,7 @@ class DispatchesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('dispatches')->insert([
+        $rows = [
             [
                 'reservation_id' => 'a0c17092-4d04-462f-bcd6-9ea30fec3978',
                 'status' => 'ASSIGNED',
@@ -54,6 +54,12 @@ class DispatchesSeeder extends Seeder
                 'assigned_at' => '2026-03-03 14:18:45',
                 'delivered_at' => null
             ]
-        ]);
+        ];
+
+        DB::table('dispatches')->upsert(
+            $rows,
+            ['reservation_id'],
+            ['status', 'vehicle_id', 'schedule', 'assigned_at', 'delivered_at']
+        );
     }
 }

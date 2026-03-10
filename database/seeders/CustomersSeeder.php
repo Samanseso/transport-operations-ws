@@ -13,7 +13,7 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('customers')->insert([
+        $rows = [
             [
                 'customer_id' => 1,
                 'customer_name' => 'Evander Wines',
@@ -42,6 +42,12 @@ class CustomersSeeder extends Seeder
                 'contact_number' => '09298210367',
                 'created_at' => '2025-09-24 13:20:32'
             ]
-        ]);
+        ];
+
+        DB::table('customers')->upsert(
+            $rows,
+            ['customer_id'],
+            ['customer_name', 'email', 'contact_number', 'created_at']
+        );
     }
 }

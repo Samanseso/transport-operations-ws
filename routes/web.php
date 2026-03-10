@@ -11,7 +11,7 @@ Route::get('/', function () {
 
 
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('dashboard', function (Request $request) {
         $role = $request->user()->role;

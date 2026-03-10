@@ -98,6 +98,9 @@ import { LatLng } from 'leaflet';
 
 declare global {
     const route: typeof routeFn;
+    interface Window {
+        axios?: import('axios').AxiosInstance;
+    }
 }
 
 export interface InputReservation {

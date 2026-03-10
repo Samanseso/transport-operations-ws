@@ -2,6 +2,7 @@ import '../css/app.css';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
+import axios from 'axios';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
@@ -9,6 +10,12 @@ import { initializeTheme } from './hooks/use-appearance';
 import { CreateReservationProvider } from './components/context/new-reservation-context';
 import { ModalProvider } from './components/context/modal-context';
 
+const token = localStorage.getItem('auth_token');
+if (token) {
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+}
+axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios = axios;
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

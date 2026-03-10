@@ -33,9 +33,9 @@ RUN npm install
 # Build frontend
 RUN npm run build
 
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
+RUN php artisan config:clear
+RUN php artisan route:clear
+RUN php artisan view:clear
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

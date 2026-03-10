@@ -20,13 +20,6 @@ php artisan view:clear
 php artisan cache:clear
 
 
-php artisan cache:table
-php artisan queue:table
-php artisan queue:batches-table
-php artisan queue:failed-table
-php artisan session:table
-php artisan notifications:table
-
 # Run database migrations
 php artisan migrate --force || true
 

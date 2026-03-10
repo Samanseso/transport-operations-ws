@@ -22,16 +22,28 @@ Route::post('login', function (Request $request) {
 
     $token = $user->createToken('web')->plainTextToken;
 
-    return response()->json([
-        'token' => $token,
-        'user' => $user,
-    ]);
+    return response()
+        ->json([
+            'token' => $token,
+            'user' => $user,
+        ])
+        ->withCookie(cookie(
+            name: 'auth_token',
+            value: $token,
+            minutes: 120,
+            path: '/',
+            secure: true,
+            httpOnly: true,
+            sameSite: 'Lax'
+        ));
 });
 
 Route::middleware('auth:sanctum')->post('logout', function (Request $request) {
     $request->user()->currentAccessToken()?->delete();
 
-    return response()->noContent();
+    return response()
+        ->noContent()
+        ->withCookie(cookie()->forget('auth_token'));
 });
 
 Route::middleware('auth:sanctum')->get('me', function (Request $request) {

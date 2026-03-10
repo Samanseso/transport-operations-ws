@@ -2,10 +2,9 @@ import { wayfinder } from '@laravel/vite-plugin-wayfinder';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
-import { defineConfig ,} from 'vite';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
-    base: 'https://transport-operations-software.onrender.com/',
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.tsx'],
@@ -14,9 +13,9 @@ export default defineConfig({
         }),
         react(),
         tailwindcss(),
-        process.env.DISABLE_WAYFINDER === 'true' ? null : wayfinder({
-            formVariants: true,
-        }),
+        process.env.DISABLE_WAYFINDER === 'true'
+            ? null
+            : wayfinder({ formVariants: true }),
     ],
     esbuild: {
         jsx: 'automatic',

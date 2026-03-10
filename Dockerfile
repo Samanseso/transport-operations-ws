@@ -28,8 +28,14 @@ COPY . .
 # Run Laravel discovery now that routes exist
 RUN php artisan package:discover --ansi
 
+RUN npm install
+
 # Build frontend
 RUN npm run build
+
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

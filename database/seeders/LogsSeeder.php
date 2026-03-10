@@ -816,11 +816,19 @@ class LogsSeeder extends Seeder
             ]
         ];
 
-        DB::table('logs')->upsert(
-            $rows,
-            ['datelog', 'timelog', 'action', 'module', 'performed_to', 'description'],
-            []
-        );
+        foreach ($rows as $row) {
+            DB::table('logs')->updateOrInsert(
+                [
+                    'datelog' => $row['datelog'],
+                    'timelog' => $row['timelog'],
+                    'action' => $row['action'],
+                    'module' => $row['module'],
+                    'performed_to' => $row['performed_to'],
+                    'description' => $row['description'],
+                ],
+                []
+            );
+        }
 
         $rows = [
             [
@@ -857,10 +865,18 @@ class LogsSeeder extends Seeder
             ]
         ];
 
-        DB::table('logs')->upsert(
-            $rows,
-            ['datelog', 'timelog', 'action', 'module', 'performed_to', 'description'],
-            []
-        );
+        foreach ($rows as $row) {
+            DB::table('logs')->updateOrInsert(
+                [
+                    'datelog' => $row['datelog'],
+                    'timelog' => $row['timelog'],
+                    'action' => $row['action'],
+                    'module' => $row['module'],
+                    'performed_to' => $row['performed_to'],
+                    'description' => $row['description'],
+                ],
+                []
+            );
+        }
     }
 }

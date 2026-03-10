@@ -66,10 +66,19 @@ class VehiclesSeeder extends Seeder
             ]
         ];
 
-        DB::table('vehicles')->upsert(
-            $rows,
-            ['vehicle_id'],
-            ['driver_id', 'plate_number', 'model', 'capacity', 'status', 'created_at', 'updated_at']
-        );
+        foreach ($rows as $row) {
+            DB::table('vehicles')->updateOrInsert(
+                ['vehicle_id' => $row['vehicle_id']],
+                [
+                    'driver_id' => $row['driver_id'],
+                    'plate_number' => $row['plate_number'],
+                    'model' => $row['model'],
+                    'capacity' => $row['capacity'],
+                    'status' => $row['status'],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at'],
+                ]
+            );
+        }
     }
 }

@@ -56,10 +56,17 @@ class DispatchesSeeder extends Seeder
             ]
         ];
 
-        DB::table('dispatches')->upsert(
-            $rows,
-            ['reservation_id'],
-            ['status', 'vehicle_id', 'schedule', 'assigned_at', 'delivered_at']
-        );
+        foreach ($rows as $row) {
+            DB::table('dispatches')->updateOrInsert(
+                ['reservation_id' => $row['reservation_id']],
+                [
+                    'status' => $row['status'],
+                    'vehicle_id' => $row['vehicle_id'],
+                    'schedule' => $row['schedule'],
+                    'assigned_at' => $row['assigned_at'],
+                    'delivered_at' => $row['delivered_at'],
+                ]
+            );
+        }
     }
 }

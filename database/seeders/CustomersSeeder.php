@@ -44,10 +44,16 @@ class CustomersSeeder extends Seeder
             ]
         ];
 
-        DB::table('customers')->upsert(
-            $rows,
-            ['customer_id'],
-            ['customer_name', 'email', 'contact_number', 'created_at']
-        );
+        foreach ($rows as $row) {
+            DB::table('customers')->updateOrInsert(
+                ['customer_id' => $row['customer_id']],
+                [
+                    'customer_name' => $row['customer_name'],
+                    'email' => $row['email'],
+                    'contact_number' => $row['contact_number'],
+                    'created_at' => $row['created_at'],
+                ]
+            );
+        }
     }
 }

@@ -80,24 +80,25 @@ class ReservationsSeeder extends Seeder
             ]
         ];
 
-        DB::table('reservations')->upsert(
-            $rows,
-            ['reservation_id'],
-            [
-                'customer_id',
-                'status',
-                'pickup_address',
-                'pickup_latlng',
-                'dropoff_address',
-                'dropoff_latlng',
-                'date',
-                'time',
-                'service_type',
-                'cargo_details',
-                'special_instructions',
-                'created_at',
-                'updated_at',
-            ]
-        );
+        foreach ($rows as $row) {
+            DB::table('reservations')->updateOrInsert(
+                ['reservation_id' => $row['reservation_id']],
+                [
+                    'customer_id' => $row['customer_id'],
+                    'status' => $row['status'],
+                    'pickup_address' => $row['pickup_address'],
+                    'pickup_latlng' => $row['pickup_latlng'],
+                    'dropoff_address' => $row['dropoff_address'],
+                    'dropoff_latlng' => $row['dropoff_latlng'],
+                    'date' => $row['date'],
+                    'time' => $row['time'],
+                    'service_type' => $row['service_type'],
+                    'cargo_details' => $row['cargo_details'],
+                    'special_instructions' => $row['special_instructions'],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at'],
+                ]
+            );
+        }
     }
 }

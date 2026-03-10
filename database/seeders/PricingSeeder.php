@@ -58,10 +58,16 @@ class PricingSeeder extends Seeder
             ]
         ];
 
-        DB::table('pricing')->upsert(
-            $rows,
-            ['pricing_id'],
-            ['service_type', 'base_rate', 'distance_rate', 'travel_time_rate']
-        );
+        foreach ($rows as $row) {
+            DB::table('pricing')->updateOrInsert(
+                ['pricing_id' => $row['pricing_id']],
+                [
+                    'service_type' => $row['service_type'],
+                    'base_rate' => $row['base_rate'],
+                    'distance_rate' => $row['distance_rate'],
+                    'travel_time_rate' => $row['travel_time_rate'],
+                ]
+            );
+        }
     }
 }

@@ -142,10 +142,18 @@ class PaymentsSeeder extends Seeder
             ]
         ];
 
-        DB::table('payments')->upsert(
-            $rows,
-            ['reservation_id'],
-            ['distance', 'travel_time', 'total_amount', 'payment_method', 'reference_number', 'paid_at']
-        );
+        foreach ($rows as $row) {
+            DB::table('payments')->updateOrInsert(
+                ['reservation_id' => $row['reservation_id']],
+                [
+                    'distance' => $row['distance'],
+                    'travel_time' => $row['travel_time'],
+                    'total_amount' => $row['total_amount'],
+                    'payment_method' => $row['payment_method'],
+                    'reference_number' => $row['reference_number'],
+                    'paid_at' => $row['paid_at'],
+                ]
+            );
+        }
     }
 }

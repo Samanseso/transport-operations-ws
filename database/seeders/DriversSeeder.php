@@ -61,10 +61,18 @@ class DriversSeeder extends Seeder
             ]
         ];
 
-        DB::table('drivers')->upsert(
-            $rows,
-            ['driver_id'],
-            ['name', 'contact_number', 'license_number', 'status', 'created_at', 'updated_at']
-        );
+        foreach ($rows as $row) {
+            DB::table('drivers')->updateOrInsert(
+                ['driver_id' => $row['driver_id']],
+                [
+                    'name' => $row['name'],
+                    'contact_number' => $row['contact_number'],
+                    'license_number' => $row['license_number'],
+                    'status' => $row['status'],
+                    'created_at' => $row['created_at'],
+                    'updated_at' => $row['updated_at'],
+                ]
+            );
+        }
     }
 }

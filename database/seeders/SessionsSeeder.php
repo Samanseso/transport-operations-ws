@@ -48,10 +48,17 @@ class SessionsSeeder extends Seeder
             ]
         ];
 
-        DB::table('sessions')->upsert(
-            $rows,
-            ['id'],
-            ['user_id', 'ip_address', 'user_agent', 'payload', 'last_activity']
-        );
+        foreach ($rows as $row) {
+            DB::table('sessions')->updateOrInsert(
+                ['id' => $row['id']],
+                [
+                    'user_id' => $row['user_id'],
+                    'ip_address' => $row['ip_address'],
+                    'user_agent' => $row['user_agent'],
+                    'payload' => $row['payload'],
+                    'last_activity' => $row['last_activity'],
+                ]
+            );
+        }
     }
 }

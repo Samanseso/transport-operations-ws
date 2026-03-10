@@ -26,6 +26,11 @@ class ApiSeeder extends Seeder
             ]
         ];
 
-        DB::table('api')->upsert($rows, ['api_id'], ['property_name', 'property_value']);
+        foreach ($rows as $row) {
+            DB::table('api')->updateOrInsert(
+                ['api_id' => $row['api_id']],
+                ['property_name' => $row['property_name'], 'property_value' => $row['property_value']]
+            );
+        }
     }
 }

@@ -66,6 +66,11 @@ class CacheSeeder extends Seeder
             ]
         ];
 
-        DB::table('cache')->upsert($rows, ['key'], ['value', 'expiration']);
+        foreach ($rows as $row) {
+            DB::table('cache')->updateOrInsert(
+                ['key' => $row['key']],
+                ['value' => $row['value'], 'expiration' => $row['expiration']]
+            );
+        }
     }
 }

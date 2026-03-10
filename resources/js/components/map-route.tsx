@@ -43,15 +43,15 @@ const MapRoute = ({ reservation, padding = 0 }: MapRouteProps) => {
         //     // setVehicleLoc(prev => new LatLng(prev.lat - 0.00005, prev.lng - 0.00005))
         // }, 500)
 
-        // getRoutes(
-        //     waypoints
-        // )
-        //     .then(res => {
-        //         setRoutePoints(res);
-        //     })
-        //     .catch(err => {
-        //         console.log(err)
-        //     })
+        getRoutes(
+            waypoints
+        )
+            .then(res => {
+                setRoutePoints(res);
+            })
+            .catch(err => {
+                console.log(err)
+            })
 
 
 

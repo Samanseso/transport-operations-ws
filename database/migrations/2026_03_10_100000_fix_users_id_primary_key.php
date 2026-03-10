@@ -19,7 +19,7 @@ return new class extends Migration
         if (DB::getDriverName() === 'pgsql') {
             DB::statement("CREATE SEQUENCE IF NOT EXISTS users_id_seq");
             DB::statement("ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq')");
-            DB::statement("SELECT setval('users_id_seq', COALESCE((SELECT MAX(id) FROM users), 0))");
+            DB::statement("SELECT setval('users_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM users), 1))");
             DB::statement("UPDATE users SET id = nextval('users_id_seq') WHERE id IS NULL");
             DB::statement("ALTER TABLE users ALTER COLUMN id SET NOT NULL");
 

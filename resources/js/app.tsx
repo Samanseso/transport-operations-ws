@@ -2,6 +2,7 @@ import '../css/app.css';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
+import './bootstrap';
 import axios from 'axios';
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';

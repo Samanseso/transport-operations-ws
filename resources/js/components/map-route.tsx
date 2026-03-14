@@ -55,16 +55,15 @@ const MapRoute = ({ reservation, padding = 0 }: MapRouteProps) => {
 
 
 
-        // const channel = window.Echo.channel("vehicles");
+        const channel = window.Echo.channel("vehicles");
 
-        // channel.listen(".VehicleLocationUpdated", (e: VehicleLocation) => {
-        //     setVehicleLoc(new LatLng(e.lat, e.lng));
-        // });
+        channel.listen(".VehicleLocationUpdated", (e: VehicleLocation) => {
+            setVehicleLoc(new LatLng(e.lat, e.lng));
+        });
 
-        // return () => {
-        //     clearInterval(interval);
-        //     try { (window as any).Echo.leaveChannel("vehicles"); } catch { }
-        // };
+        return () => {
+            try { (window as any).Echo.leaveChannel("vehicles"); } catch { }
+        };
 
     }, []);
 

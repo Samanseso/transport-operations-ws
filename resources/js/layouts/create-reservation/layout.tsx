@@ -20,7 +20,7 @@ interface CreateReservationLayoutProps {
 
 export default function CreateReservationLayout({ children }: PropsWithChildren<CreateReservationLayoutProps>) {
 
-    const { props } = usePage<{ modal: ModalType }>();
+    const { props } = usePage<{ modal: ModalType; edit_mode?: boolean; edit_reservation_id?: string }>();
 
     const { content, createModal } = useModal();
 
@@ -38,34 +38,40 @@ export default function CreateReservationLayout({ children }: PropsWithChildren<
     }
     const currentPath = window.location.pathname;
 
+    const editMode = Boolean(props.edit_mode && props.edit_reservation_id);
+    const editId = props.edit_reservation_id;
+
+    const stepHref = (stepNum: string) =>
+        editMode ? `/reservations/${editId}/edit/step/${stepNum}` : step(stepNum);
+
     const sidebarNavItems: NavItem[] = [
         {
             title: 'Date & Vehicle',
-            href: step("1"),
+            href: stepHref("1"),
             icon: Truck,
             roles: ["all"]
         },
         {
             title: ' Pick-up',
-            href: step("2"),
+            href: stepHref("2"),
             icon: MapPin,
             roles: ["all"]
         },
         {
             title: 'Drop-off',
-            href: step("3"),
+            href: stepHref("3"),
             icon: MapPinned,
             roles: ["all"]
         },
         {
             title: 'Details',
-            href: step("4"),
+            href: stepHref("4"),
             icon: ClipboardPen,
             roles: ["all"]
         },
         {
             title: 'Summary',
-            href: step("5"),
+            href: stepHref("5"),
             icon: NotepadText,
             roles: ["all"]
         },
@@ -77,7 +83,10 @@ export default function CreateReservationLayout({ children }: PropsWithChildren<
 
             <Modal content={content} />
 
-            <Heading title="Create Reservation" description="Follow the steps to create a new reservation." />
+            <Heading
+                title={editMode ? "Edit Reservation" : "Create Reservation"}
+                description={editMode ? "Update the reservation details." : "Follow the steps to create a new reservation."}
+            />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">
                 <aside className="w-full max-w-xl lg:w-48">

@@ -5,16 +5,17 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSep
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import { LatLng } from 'leaflet';
 import { Button } from './ui/button';
-import { EllipsisVertical, PenBox, Trash } from 'lucide-react';
+import { EllipsisVertical, Eye, PenBox, Trash } from 'lucide-react';
 import { DeleteReservation } from "./delete-reservation";
 import { useState } from 'react';
+import { show } from '@/routes/reservations';
 
 interface ReservationCardProps {
     reservation: Reservation;
     updateTable: (newReservation: PaginationType<Reservation[]>) => void;
 }
 
-const ReservationCard = ({ reservation, updateTable }: ReservationCardProps ) => {
+const ReservationCard = ({ reservation, updateTable }: ReservationCardProps) => {
 
     const startDate = new Date(reservation.dispatch.schedule);
     const endDate = new Date(reservation.date);
@@ -38,7 +39,7 @@ const ReservationCard = ({ reservation, updateTable }: ReservationCardProps ) =>
     const doDelete = (id: string) => {
         setIsOpenDeleteModal(true);
         setSelectedStudent(id)
-    } 
+    }
 
 
 
@@ -58,10 +59,18 @@ const ReservationCard = ({ reservation, updateTable }: ReservationCardProps ) =>
                             </Button>
                         </DropdownMenuTrigger>
 
+
+
+
                         <DropdownMenuContent align='end' onClick={(e) => e.stopPropagation()}>
                             <DropdownMenuItem asChild>
-                                <Link href={"" /* go to a link reservations/update instead of reservations/create*/}>
-                                    <PenBox className="size-4 text-rose-500" />Update
+                                <Link href={show(reservation.reservation_id)}>
+                                    <Eye /> Update
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href={`/reservations/${reservation.reservation_id}/edit`}>
+                                    <PenBox className="size-4 text-blue" />Update
                                 </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />

@@ -23,6 +23,25 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
+    private function seedEditSession(Reservation $reservation): void
+    {
+        $dispatch = Dispatch::where('reservation_id', $reservation->reservation_id)->first();
+
+        session()->put('edit_reservation_id', $reservation->reservation_id);
+        session()->put('current_step', 5);
+        session()->put('vehicle_id', $dispatch?->vehicle_id);
+        $dispatchSchedule = $dispatch?->schedule;
+        session()->put('date', $reservation->date ?? ($dispatchSchedule ? Carbon::parse($dispatchSchedule)->toDateString() : null));
+        session()->put('time', $reservation->time ?? ($dispatchSchedule ? Carbon::parse($dispatchSchedule)->format('H:i') : null));
+        session()->put('pickup_address', $reservation->pickup_address);
+        session()->put('pickup_latlng', $reservation->pickup_latlng);
+        session()->put('dropoff_address', $reservation->dropoff_address);
+        session()->put('dropoff_latlng', $reservation->dropoff_latlng);
+        session()->put('service_type', $reservation->service_type);
+        session()->put('cargo_details', $reservation->cargo_details);
+        session()->put('special_instructions', $reservation->special_instructions);
+        session()->put('customer_id', $reservation->customer_id);
+    }
     public function get_current_page(Request $request)
     {
         $url = $request->header('referer');
@@ -64,6 +83,18 @@ class ReservationController extends Controller
 
         return Inertia::render("admin/reservation-details", [
             'reservation' => $reservation,
+        ]);
+    }
+
+    public function edit(Request $request, $reservation_id)
+    {
+        $reservation = Reservation::with(['dispatch'])->where('reservation_id', $reservation_id)->firstOrFail();
+        $this->seedEditSession($reservation);
+
+        return redirect()->route('reservations.edit.step', [
+            'reservation_id' => $reservation_id,
+            'step' => 1,
+            'date' => session('date') ?? date('Y-m-d'),
         ]);
     }
 
@@ -127,6 +158,39 @@ class ReservationController extends Controller
         }
     }
 
+    public function editStep(Request $request, $reservation_id, $step)
+    {
+        if (session('edit_reservation_id') !== $reservation_id) {
+            return $this->edit($request, $reservation_id);
+        }
+
+        if ((int)$step > 1 && (int)$step > session('current_step')) {
+            return redirect()
+                ->route('reservations.edit.step', ['reservation_id' => $reservation_id, 'step' => session('current_step') ?? 1])
+                ->with([
+                    'modal_status' => "error",
+                    'modal_action' => "edit",
+                    'modal_title' => "Invalid action!",
+                    'modal_message' => "Please finish previous steps first.",
+                ]);
+        };
+
+        switch ($step) {
+            case 1:
+                return $this->renderStep1($request, $request->query('date') ?? (session('date') ?? date('Y-m-d')));
+            case 2:
+                return $this->renderStep2();
+            case 3:
+                return $this->renderStep3();
+            case 4:
+                return $this->renderStep4($request);
+            case 5:
+                return $this->renderStep5();
+            default:
+                return redirect()->route('reservations.edit.step', ['reservation_id' => $reservation_id, 'step' => 1]);
+        }
+    }
+
     public function renderStep1(Request $request, $date)
     {
         try {
@@ -135,6 +199,9 @@ class ReservationController extends Controller
             $parsedDate = Carbon::today()->toDateString();
         }
 
+        if (session()->has('edit_reservation_id') && session('date')) {
+            $parsedDate = session('date');
+        }
 
 
 
@@ -157,6 +224,8 @@ class ReservationController extends Controller
             'date' => $parsedDate,
             'availableVehicles' => $availableVehicles,
             'unavailableVehicles' => $unavailableVehicles,
+            'edit_mode' => session()->has('edit_reservation_id'),
+            'edit_reservation_id' => session('edit_reservation_id'),
         ]);
     }
 
@@ -166,6 +235,10 @@ class ReservationController extends Controller
             'location_type' => 'pickup',
             'pickup_address' => session('pickup_address'),
             'pickup_latlng' => session('pickup_latlng'),
+            'dropoff_address' => session('dropoff_address'),
+            'dropoff_latlng' => session('dropoff_latlng'),
+            'edit_mode' => session()->has('edit_reservation_id'),
+            'edit_reservation_id' => session('edit_reservation_id'),
         ]);
     }
 
@@ -175,23 +248,32 @@ class ReservationController extends Controller
             'location_type'     => 'dropoff',
             'dropoff_address'   => session('dropoff_address'),
             'dropoff_latlng'    => session('dropoff_latlng'),
+            'pickup_address' => session('pickup_address'),
+            'pickup_latlng' => session('pickup_latlng'),
+            'edit_mode' => session()->has('edit_reservation_id'),
+            'edit_reservation_id' => session('edit_reservation_id'),
         ]);
     }
 
     public function renderStep4(Request $request)
     {
         return Inertia::render('admin/new-reservation/details', [
-            'customer_id'           => $request->user()->id,
+            'customer_id'           => session('customer_id') ?? $request->user()->id,
             'service_type'          => session('service_type'),
             'time'                  => session('time'),
             'cargo_details'         => session('cargo_details'),
             'special_instructions'  => session('special_instructions'),
+            'edit_mode' => session()->has('edit_reservation_id'),
+            'edit_reservation_id' => session('edit_reservation_id'),
         ]);
     }
 
     public function renderStep5()
     {
-        return Inertia::render('admin/new-reservation/summary');
+        return Inertia::render('admin/new-reservation/summary', [
+            'edit_mode' => session()->has('edit_reservation_id'),
+            'edit_reservation_id' => session('edit_reservation_id'),
+        ]);
     }
 
 
@@ -247,28 +329,60 @@ class ReservationController extends Controller
 
     public function processStep5(Request $request): RedirectResponse
     {
-        $reservationId = Str::orderedUuid();
+        $isEdit = session()->has('edit_reservation_id');
+        $reservationId = $isEdit ? session('edit_reservation_id') : Str::orderedUuid();
 
-        Dispatch::create([
-            'reservation_id'    => $reservationId,
-            'vehicle_id'        => session('vehicle_id'),
-            'schedule'          => session('date') . " " . session('time'),
-            'assigned_at'       => now(),
-        ]);
+        if ($isEdit) {
+            $reservation = Reservation::where('reservation_id', $reservationId)->firstOrFail();
+            $reservation->update([
+                'pickup_address'       => session('pickup_address'),
+                'pickup_latlng'        => session('pickup_latlng'),
+                'dropoff_address'      => session('dropoff_address'),
+                'dropoff_latlng'       => session('dropoff_latlng'),
+                'customer_id'          => session('customer_id') ?? $request->user()->id,
+                'service_type'         => session('service_type'),
+                'date'                 => session('date'),
+                'time'                 => session('time'),
+                'cargo_details'        => session('cargo_details'),
+                'special_instructions' => session('special_instructions'),
+            ]);
 
-        $reservation = Reservation::create([
-            'reservation_id'      => $reservationId,
-            'pickup_address'      => session('pickup_address'),
-            'pickup_latlng'       => session('pickup_latlng'),
-            'dropoff_address'     => session('dropoff_address'),
-            'dropoff_latlng'      => session('dropoff_latlng'),
-            'customer_id'         => $request->user()->id,
-            'service_type'        => session('service_type'),
-            'date'                => session('date'),
-            'time'                => session('time'),
-            'cargo_details'       => session('cargo_details'),
-            'special_instructions' => session('special_instructions'),
-        ]);
+            $dispatch = Dispatch::where('reservation_id', $reservationId)->first();
+            if ($dispatch) {
+                $dispatch->update([
+                    'vehicle_id' => session('vehicle_id'),
+                    'schedule' => session('date') . " " . session('time'),
+                ]);
+            } else {
+                Dispatch::create([
+                    'reservation_id'    => $reservationId,
+                    'vehicle_id'        => session('vehicle_id'),
+                    'schedule'          => session('date') . " " . session('time'),
+                    'assigned_at'       => now(),
+                ]);
+            }
+        } else {
+            Dispatch::create([
+                'reservation_id'    => $reservationId,
+                'vehicle_id'        => session('vehicle_id'),
+                'schedule'          => session('date') . " " . session('time'),
+                'assigned_at'       => now(),
+            ]);
+
+            $reservation = Reservation::create([
+                'reservation_id'      => $reservationId,
+                'pickup_address'      => session('pickup_address'),
+                'pickup_latlng'       => session('pickup_latlng'),
+                'dropoff_address'     => session('dropoff_address'),
+                'dropoff_latlng'      => session('dropoff_latlng'),
+                'customer_id'         => $request->user()->id,
+                'service_type'        => session('service_type'),
+                'date'                => session('date'),
+                'time'                => session('time'),
+                'cargo_details'       => session('cargo_details'),
+                'special_instructions' => session('special_instructions'),
+            ]);
+        }
 
         session()->forget([
             'pickup_address',
@@ -279,17 +393,23 @@ class ReservationController extends Controller
             'time',
             'cargo_details',
             'special_instructions',
+            'vehicle_id',
+            'date',
+            'customer_id',
+            'edit_reservation_id',
         ]);
 
-        broadcast(new ReservationCreated($reservation));
+        if (! $isEdit) {
+            broadcast(new ReservationCreated($reservation));
+        }
 
         return redirect()
             ->route('reservations.index')
             ->with([
                 'modal_status' => "success",
-                'modal_action' => "create",
-                'modal_title' => "Reservation created!",
-                'modal_message' => "Reservation " . $reservation->reservation_id . " was created successfully.",
+                'modal_action' => $isEdit ? "update" : "create",
+                'modal_title' => $isEdit ? "Reservation updated!" : "Reservation created!",
+                'modal_message' => "Reservation " . $reservation->reservation_id . " was " . ($isEdit ? "updated" : "created") . " successfully.",
             ]);
     }
 }

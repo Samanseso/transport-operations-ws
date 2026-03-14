@@ -60,7 +60,7 @@ const defaultColumns = [
 
 
 export default function ReseravtionList({ reservations }: { reservations: PaginationType<Reservation[]> }) {
-	
+
 
 	const [reservation, setReservation] = useState<Reservation[]>(reservations.data);
 	const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
@@ -143,9 +143,7 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
 
 			<div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{reservation.map((r, index) => (
-					<Link as="div" key={index} href={show(r.reservation_id)}>
-						<ReservationCard reservation={r} updateTable={updateTable} />
-					</Link>
+					<ReservationCard reservation={r} updateTable={updateTable} />
 				))}
 			</div>
 

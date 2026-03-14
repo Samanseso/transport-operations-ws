@@ -14,17 +14,6 @@ import ReservationController from '@/actions/App/Http/Controllers/ReservationCon
 import { latlngToString } from '@/lib/utils';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Reservations',
-        href: '/reservations',
-    },
-    {
-        title: 'Create',
-        href: '/reservations/create/select',
-    },
-];
-
 const DEFAULT_POSITION = new LatLng(14.5668952, 121.0679065);
 
 const getInitialPosition = (locationType: string, pickup_latlng: string | null, dropoff_latlng: string | null): LatLng => {
@@ -59,7 +48,20 @@ const PickUp = () => {
         pickup_latlng: string | null,
         dropoff_address: string | null,
         dropoff_latlng: string | null,
+        edit_mode?: boolean,
+        edit_reservation_id?: string,
     }>();
+
+    const editMode = Boolean(props.edit_mode && props.edit_reservation_id);
+    const editId = props.edit_reservation_id;
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Reservations', href: '/reservations' },
+        {
+            title: editMode ? 'Edit' : 'Create',
+            href: editMode ? `/reservations/${editId}/edit` : '/reservations/create/select',
+        },
+    ];
 
 
     const initialPosition = getInitialPosition(props.location_type, props.pickup_latlng, props.dropoff_latlng);

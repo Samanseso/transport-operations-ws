@@ -15,20 +15,19 @@ import { useNewReservation } from '@/components/context/new-reservation-context'
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Reservations',
-        href: '/reservations',
-    },
-    {
-        title: 'Create',
-        href: '/reservations/create/select',
-    },
-];
-
 const SelectDateVehicle = () => {
 
-    const { props } = usePage<{ date: string, availableVehicles: Vehicle[], unavailableVehicles: Vehicle[] }>();
+    const { props } = usePage<{ date: string; availableVehicles: Vehicle[]; unavailableVehicles: Vehicle[]; edit_mode?: boolean; edit_reservation_id?: string }>();
+    const editMode = Boolean(props.edit_mode && props.edit_reservation_id);
+    const editId = props.edit_reservation_id;
+
+    const breadcrumbs: BreadcrumbItem[] = [
+        { title: 'Reservations', href: '/reservations' },
+        {
+            title: editMode ? 'Edit' : 'Create',
+            href: editMode ? `/reservations/${editId}/edit` : '/reservations/create/select',
+        },
+    ];
 
     const dateToday = new Date();
     const queryDate = new Date(props.date == "today" ? dateToday : props.date)

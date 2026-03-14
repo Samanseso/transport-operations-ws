@@ -1,4 +1,3 @@
-import { step } from '@/routes/reservations';
 import { Button } from './ui/button';
 import { Link, usePage } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -10,7 +9,9 @@ import { cn } from '@/lib/utils';
 
 
 const Calendar = () => {
-    const { props } = usePage<{ date: string }>();
+    const { props } = usePage<{ date: string; edit_mode?: boolean; edit_reservation_id?: string }>();
+    const editMode = Boolean(props.edit_mode && props.edit_reservation_id);
+    const editId = props.edit_reservation_id;
 
     const dateToday = new Date();
     const queryDate = new Date(props.date == "today" ? dateToday : props.date)
@@ -45,12 +46,12 @@ const Calendar = () => {
 
                                 const formattedDate = `${url_year}-${url_month}-${ulr_day}`;
 
+                                const href = editMode
+                                    ? `/reservations/${editId}/edit/step/1?date=${formattedDate}`
+                                    : `/reservations/create/step/1?date=${formattedDate}`;
+
                                 return (
-                                    <Link
-                                        href={step(1, { query: { date: formattedDate } })}
-                                        key={i}
-                                        className='mx-auto w-full flex'
-                                    >
+                                    <Link href={href} key={i} className='mx-auto w-full flex'>
                                         <div
                                             className={cn('p-1 w-full text-center rounded', {
 
@@ -82,7 +83,7 @@ const Calendar = () => {
 
                     <div className='flex items-center gap-3'>
                         <Button variant="outline" size="icon" onClick={() => { const newDate = new Date(selectedDate); newDate.setDate(selectedDate.getDate() - 9); setSelectedDate(newDate) }}><ChevronLeft /></Button>
-                        <Link href={step("1", { query: { date: "today" } })}>TODAY</Link>
+                        <Link href={editMode ? `/reservations/${editId}/edit/step/1?date=today` : `/reservations/create/step/1?date=today`}>TODAY</Link>
                         <Button variant="outline" size="icon" onClick={() => { const newDate = new Date(selectedDate); newDate.setDate(selectedDate.getDate() + 9); setSelectedDate(newDate) }}><ChevronRight /></Button>
                     </div>
 

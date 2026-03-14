@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuSep
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import { LatLng } from 'leaflet';
 import { Button } from './ui/button';
-import { EllipsisVertical, Trash } from 'lucide-react';
+import { EllipsisVertical, PenBox, Trash } from 'lucide-react';
 import { DeleteReservation } from "./delete-reservation";
 import { useState } from 'react';
 
@@ -53,13 +53,18 @@ const ReservationCard = ({ reservation, updateTable }: ReservationCardProps ) =>
 
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant='ghost'>
+                            <Button size="sm" variant='ghost' onClick={(e) => e.stopPropagation()}>
                                 <EllipsisVertical className="size-4" />
                             </Button>
                         </DropdownMenuTrigger>
 
-
-                        <DropdownMenuContent align='end'>
+                        <DropdownMenuContent align='end' onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenuItem asChild>
+                                <Link href={"" /* go to a link reservations/update instead of reservations/create*/}>
+                                    <PenBox className="size-4 text-rose-500" />Update
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => doDelete(reservation.reservation_id)}>
                                 <Trash className="size-4 text-rose-500" />Delete
                             </DropdownMenuItem>

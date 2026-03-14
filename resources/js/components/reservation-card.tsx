@@ -65,9 +65,10 @@ const ReservationCard = ({ reservation, updateTable }: ReservationCardProps) => 
                         <DropdownMenuContent align='end' onClick={(e) => e.stopPropagation()}>
                             <DropdownMenuItem asChild>
                                 <Link href={show(reservation.reservation_id)}>
-                                    <Eye /> Update
+                                    <Eye className='size-4 text-black' /> View
                                 </Link>
                             </DropdownMenuItem>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem asChild>
                                 <Link href={`/reservations/${reservation.reservation_id}/edit`}>
                                     <PenBox className="size-4 text-blue" />Update

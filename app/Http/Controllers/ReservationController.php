@@ -23,6 +23,25 @@ use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
+    private function clearCreateSession(): void
+    {
+        session()->forget([
+            'pickup_address',
+            'pickup_latlng',
+            'dropoff_address',
+            'dropoff_latlng',
+            'service_type',
+            'time',
+            'cargo_details',
+            'special_instructions',
+            'vehicle_id',
+            'date',
+            'customer_id',
+            'edit_reservation_id',
+            'current_step',
+        ]);
+    }
+
     private function seedEditSession(Reservation $reservation): void
     {
         $dispatch = Dispatch::where('reservation_id', $reservation->reservation_id)->first();
@@ -64,6 +83,7 @@ class ReservationController extends Controller
 
     public function index(Request $request)
     {
+        $this->clearCreateSession();
 
         if ($request->user()->role === 'CUSTOMER') {
             return redirect()->route('my-reservations.index');
@@ -75,6 +95,8 @@ class ReservationController extends Controller
 
     public function show($id)
     {
+        $this->clearCreateSession();
+
         $reservation = Reservation::with([
             'customer',
             'dispatch',
@@ -102,6 +124,7 @@ class ReservationController extends Controller
     {
         $page = $this->get_current_page($request);
 
+        $this->clearCreateSession();
 
         $reservation = Reservation::where('reservation_id', $reservation_id)->firstOrFail();
 
@@ -199,7 +222,7 @@ class ReservationController extends Controller
             $parsedDate = Carbon::today()->toDateString();
         }
 
-        if (session()->has('edit_reservation_id') && session('date')) {
+        if (! $request->query('date') && session('date')) {
             $parsedDate = session('date');
         }
 

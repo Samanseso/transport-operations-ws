@@ -9,4 +9,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('tasks', [TaskController::class, 'index'])->name('task.index');
     Route::get('tasks/{reservation_id}', [TaskController::class, 'show'])->name('task.show');
     Route::post('tasks/location', [TaskController::class, 'update'])->name('task.update');
+    Route::post('tasks/{reservation_id}/status', [TaskController::class, 'updateStatus'])->name('task.updateStatus');
 });

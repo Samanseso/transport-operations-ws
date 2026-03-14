@@ -49,4 +49,22 @@ class TaskController extends Controller
             $request->longitude
         ));
     }
+
+    public function updateStatus(Request $request, $reservation_id)
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'string'],
+        ]);
+
+        $dispatch = Dispatch::where('reservation_id', $reservation_id)->firstOrFail();
+        $dispatch->status = $validated['status'];
+
+        if ($validated['status'] === 'COMPLETE') {
+            $dispatch->delivered_at = now();
+        }
+
+        $dispatch->save();
+
+        return back(303);
+    }
 }

@@ -51,6 +51,36 @@ const TaskDetails = () => {
     const [position, setPosition] = useState<LatLng>(new LatLng(14.77255, 120.97353));
     const [routes, setRoute] = useState<LatLng[]>([]);
     const [vehicleLoc, setVehicleLoc] = useState()
+    const [status, setStatus] = useState<string>(props.reservation.dispatch.status || '');
+
+    const getNextAction = (current: string) => {
+        if (!current || current === 'ASSIGNED' || current === 'PENDING') {
+            return { label: 'Start', status: 'EN_ROUTE' };
+        }
+        if (current === 'EN_ROUTE') {
+            return { label: 'Arrived at Pick Up', status: 'WAITING' };
+        }
+        if (current === 'WAITING') {
+            return { label: 'Going to Dropoff', status: 'EN_ROUTE_DROPOFF' };
+        }
+        if (current === 'EN_ROUTE_DROPOFF') {
+            return { label: 'Arrived at Dropoff', status: 'COMPLETE' };
+        }
+        return null;
+    };
+
+    const nextAction = getNextAction(status);
+
+    const handleStatusUpdate = () => {
+        if (!nextAction) return;
+
+        router.post(`/tasks/${props.reservation.reservation_id}/status`, { status: nextAction.status }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setStatus(nextAction.status);
+            },
+        });
+    };
 
 
 
@@ -103,10 +133,12 @@ const TaskDetails = () => {
                             </div>
 
                             <div className='flex items-center gap-2'>
-                                <Button className='bg-sky-400'>
-                                    <Send />
-                                    Start
-                                </Button>
+                                {nextAction && (
+                                    <Button className='bg-sky-400' onClick={handleStatusUpdate}>
+                                        <Send />
+                                        {nextAction.label}
+                                    </Button>
+                                )}
                                 <ChevronUp size={15} className='mx-3' />
                             </div>
 

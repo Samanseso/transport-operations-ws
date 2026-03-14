@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             CustomersSeeder::class,
             DispatchesSeeder::class,
             DriversSeeder::class,
+            DriverUsersSeeder::class,
             LogsSeeder::class,
             MigrationsSeeder::class,
             PaymentsSeeder::class,

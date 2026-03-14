@@ -51,7 +51,7 @@ const TaskDetails = () => {
     const [position, setPosition] = useState<LatLng>(new LatLng(14.77255, 120.97353));
     const [routes, setRoute] = useState<LatLng[]>([]);
     const [vehicleLoc, setVehicleLoc] = useState()
-    const [status, setStatus] = useState<string>(props.reservation.dispatch.status || '');
+    const [status, setStatus] = useState<string>(props.reservation.status || '');
 
     const getNextAction = (current: string) => {
         if (!current || current === 'ASSIGNED' || current === 'PENDING') {

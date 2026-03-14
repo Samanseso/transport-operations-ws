@@ -28,7 +28,7 @@ const ActiveDisptach = ({ reservation, selectedReservation }: { reservation: Res
 						"..."
 					}</span>
 					</p>
-					<StatusTag text={reservation.dispatch.status} />
+					<StatusTag text={reservation.status} />
 				</div>
 
 

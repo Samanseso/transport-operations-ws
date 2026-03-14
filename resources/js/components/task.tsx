@@ -30,7 +30,7 @@ const Task = ({ reservation }: { reservation: Reservation }) => {
             <div className="px-3">
                 <div className='flex justify-between items-center mb-1'>
                     <p className='font-bold'>{reservation.customer.name}</p>
-                    <StatusTag text={reservation.dispatch.status} />
+                    <StatusTag text={reservation.status} />
                 </div>
 
                 <p className='text-xs text-gray-500 mb-2'>{reservation.service_type}</p>

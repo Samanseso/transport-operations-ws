@@ -56,14 +56,9 @@ class TaskController extends Controller
             'status' => ['required', 'string'],
         ]);
 
-        $dispatch = Dispatch::where('reservation_id', $reservation_id)->firstOrFail();
-        $dispatch->status = $validated['status'];
-
-        if ($validated['status'] === 'COMPLETE') {
-            $dispatch->delivered_at = now();
-        }
-
-        $dispatch->save();
+        $reservation = Reservation::where('reservation_id', $reservation_id)->firstOrFail();
+        $reservation->status = $validated['status'];
+        $reservation->save();
 
         return back(303);
     }

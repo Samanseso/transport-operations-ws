@@ -24,7 +24,7 @@ const TabOrderDetails = ({ reservation }: { reservation: Reservation }) => {
                         "..."
                     }</span>
                     </p>
-                    <StatusTag text={reservation.dispatch.status} />
+                    <StatusTag text={reservation.status} />
                 </div>
 
                 <div className='flex items-center gap-2 text-gray-500'>

@@ -15,6 +15,7 @@ import { ColumnsMenu } from "./columns-menu";
 import '../bootstrap';
 import Task from "./task";
 import reservations from '../routes/reservations/index';
+import ReservationCard from "./reservation-card";
 
 const breadcrumbs: BreadcrumbItem[] = [
 	{
@@ -65,15 +66,6 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
 	const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
 	const [filteredReservations, setFilteredReservations] = useState<Reservation[][]>(reservation.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
 	const [searchInput, setSearchInput] = useState('');
-	const [selectedStudent, setSelectedStudent] = useState<string>('');
-	const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
-
-
-	const doDelete = (id: string) => {
-		setIsOpenDeleteModal(true);
-		setSelectedStudent(id)
-	}
-
 
 	const updateTable = (newReservation: PaginationType<Reservation[]>) => {
 		setReservation(newReservation.data);
@@ -152,17 +144,12 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
 			<div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{reservation.map((r, index) => (
 					<Link as="div" key={index} href={show(r.reservation_id)}>
-						<Task reservation={r} />
+						<ReservationCard reservation={r} updateTable={updateTable} />
 					</Link>
 				))}
 			</div>
 
 
-			<DeleteReservation
-				reservation_id={selectedStudent}
-				isOpen={isOpenDeleteModal}
-				setIsOpen={setIsOpenDeleteModal}
-				updateTable={updateTable} />
 		</div>
 
 

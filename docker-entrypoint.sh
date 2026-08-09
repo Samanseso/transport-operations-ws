@@ -3,11 +3,11 @@ set -e
 
 # Use Render/host provided PORT or default to 8000
 PORT=${PORT:-8000}
+export PORT
 
-# Replace placeholder in supervisord.conf if present
-if grep -q "%(ENV_PORT)s" /etc/supervisor/conf.d/supervisord.conf 2>/dev/null; then
-  sed -i "s/%(ENV_PORT)s/${PORT}/g" /etc/supervisor/conf.d/supervisord.conf
-fi
+# Ensure Reverb listens on the Render web service port
+export REVERB_SERVER_HOST=${REVERB_SERVER_HOST:-0.0.0.0}
+export REVERB_SERVER_PORT=${REVERB_SERVER_PORT:-$PORT}
 
 # Ensure storage and cache directories are writable
 chown -R www-data:www-data storage bootstrap/cache || true
@@ -19,9 +19,6 @@ php artisan route:clear
 php artisan view:clear
 php artisan cache:clear
 
-
-# Run database migrations (fail fast if this does not succeed)
-php artisan migrate --seed --force
 
 # Start supervisor
 exec "$@"
